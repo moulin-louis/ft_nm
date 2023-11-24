@@ -1,4 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -G Ninja -S /mnt/nfs/homes/loumouli/ft_nm -B /mnt/nfs/homes/loumouli/ft_nm/cmake-build-debug
--- Configuring done
--- Generating done
--- Build files have been written to: /mnt/nfs/homes/loumouli/ft_nm/cmake-build-debug
