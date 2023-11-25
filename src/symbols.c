@@ -4,12 +4,9 @@
 
 #include "ft_nm.h"
 
-char* to_lower(char* str) {
-  for (uint32_t i = 0; i < strlen(str); i++) {
-    str[i] = tolower(str[i]);
-  }
-  return str;
-}
+
+
+
 
 void print_value(t_nm* file, const Elf64_Sym* sym) {
   (void)file;
@@ -43,33 +40,33 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
   Elf64_Shdr *shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (file->elf64_header->e_shstrndx * file->elf64_header->e_shentsize));
   char *section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
   char result = 0;
-  if (strcmp(section_name, ".text") == 0 )
+  if (ft_strncmp(section_name, ".text", ft_strlen(section_name)) == 0 )
 		result = 'T';
-	else if (strcmp(section_name, "completed.0") == 0 )
+	else if (ft_strncmp(section_name, "completed.0", ft_strlen(section_name)) == 0 )
 		result = 'B';
-	else if (strcmp(section_name, ".fini") == 0 )
+	else if (ft_strncmp(section_name, ".fini", ft_strlen(section_name)) == 0 )
 		result = 'T';
-	else if (strcmp(section_name, ".data") == 0 )
+	else if (ft_strncmp(section_name, ".data", ft_strlen(section_name)) == 0 )
 		result = 'D';
-	else if (strcmp(section_name, ".rodata") == 0 )
+	else if (ft_strncmp(section_name, ".rodata", ft_strlen(section_name)) == 0 )
 		result = 'R';
-	else if (strcmp(section_name, ".bss") == 0 )
+	else if (ft_strncmp(section_name, ".bss", ft_strlen(section_name)) == 0 )
 		result = 'B';
-	else if (strcmp(section_name, ".init") == 0 )
+	else if (ft_strncmp(section_name, ".init", ft_strlen(section_name)) == 0 )
 		result = 'T';
-	else if (strcmp(section_name, ".fini_array") == 0 )
+	else if (ft_strncmp(section_name, ".fini_array", ft_strlen(section_name)) == 0 )
 		result = 'D';
-	else if (strcmp(section_name, ".init_array") == 0 )
+	else if (ft_strncmp(section_name, ".init_array", ft_strlen(section_name)) == 0 )
 		result = 'D';
-	else if (strcmp(section_name, ".eh_frame") == 0 )
+	else if (ft_strncmp(section_name, ".eh_frame", ft_strlen(section_name)) == 0 )
 		result = 'R';
-	else if (strcmp(section_name, ".dynamic") == 0 )
+	else if (ft_strncmp(section_name, ".dynamic", ft_strlen(section_name)) == 0 )
 		result = 'D';
-	else if (strcmp(section_name, ".eh_frame_hdr") == 0 )
+	else if (ft_strncmp(section_name, ".eh_frame_hdr", ft_strlen(section_name)) == 0 )
 		result = 'R';
-	else if (strcmp(section_name, ".got.plt") == 0 )
+	else if (ft_strncmp(section_name, ".got.plt", ft_strlen(section_name)) == 0 )
 		result = 'D';
-	else if (strcmp(section_name, ".note.ABI-tag") == 0 )
+	else if (ft_strncmp(section_name, ".note.ABI-tag", ft_strlen(section_name)) == 0 )
 		result = 'R';
   else {
     printf("%s:", section_name);
@@ -91,7 +88,19 @@ void print_name(t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
   printf("%s", sym_str_tab + sym->st_name);
 }
 
-int32_t extract_symbols_64(t_nm* file) {
+void sort_entry(Elf64_Sym* sym_tab, char* sym_str_tab, const Elf64_Shdr* sym_tab_header, CmpFn cmp_fn) {
+  for (uint32_t i = 0; i < sym_tab_header->sh_size / sizeof(Elf64_Sym); i++) {
+    for (uint32_t j = i + 1; j < sym_tab_header->sh_size / sizeof(Elf64_Sym); j++) {
+      if (cmp_fn(sym_tab, sym_str_tab, i, j) > 0) {
+        Elf64_Sym tmp = sym_tab[i];
+        sym_tab[i] = sym_tab[j];
+        sym_tab[j] = tmp;
+      }
+    }
+  }
+}
+
+int32_t extract_symbols_64(t_nm* file, t_flags *flags) {
   const Elf64_Shdr* sym_tab_header = NULL;
   const Elf64_Shdr* sym_str_tab_header = NULL;
   for (shdr_list_64_t* tmp = file->sections_list; tmp != NULL; tmp = tmp->next) {
@@ -101,7 +110,10 @@ int32_t extract_symbols_64(t_nm* file) {
     }
   }
   if (sym_tab_header == NULL) {
-    fprintf(stderr, "ft_nm: %s: %s\n", (char *)file->path, "no symbols");
+    ft_putstr_fd("ft_nm: ", 2);
+    ft_putstr_fd((const char *)file->path, 2);
+    ft_putstr_fd(" ", 2);
+    ft_putstr_fd("no symbol\n", 2);
     return 1;
   }
   uint32_t idx = 0;
@@ -113,42 +125,23 @@ int32_t extract_symbols_64(t_nm* file) {
     idx += 1;
   }
   if (idx != sym_tab_header->sh_link) {
-    fprintf(stderr, "ft_nm: %s: %s\n", (char *)file->path, "no symbols");
+    ft_putstr_fd("ft_nm: ", 2);
+    ft_putstr_fd((const char *)file->path, 2);
+    ft_putstr_fd(" ", 2);
+    ft_putstr_fd("no symbol\n", 2);
     return 1;
   }
   Elf64_Sym* sym_tab = (Elf64_Sym *)(file->raw_data + sym_tab_header->sh_offset);
   char* sym_str_tab = (char *)(file->raw_data + sym_str_tab_header->sh_offset);
   //sort symbols in alphabetical order
-  for (uint32_t i = 0; i < sym_tab_header->sh_size / sizeof(Elf64_Sym); i++) {
-    for (uint32_t j = i + 1; j < sym_tab_header->sh_size / sizeof(Elf64_Sym); j++) {
-      uint32_t idx_start1 = 0;
-      uint32_t idx_start2 = 0;
-      while (sym_str_tab[sym_tab[i].st_name + idx_start1] == '_') {
-        idx_start1 += 1;
-      }
-      while (sym_str_tab[sym_tab[j].st_name + idx_start2] == '_') {
-        idx_start2 += 1;
-      }
-      const char* str1 = to_lower(strdup(sym_str_tab + sym_tab[i].st_name + idx_start1));
-      const char* str2 = to_lower(strdup(sym_str_tab + sym_tab[j].st_name + idx_start2));
-      if (strcmp(str1, str2) > 0) {
-        Elf64_Sym tmp = sym_tab[i];
-        sym_tab[i] = sym_tab[j];
-        sym_tab[j] = tmp;
-      }
-      free((void *)str1);
-      free((void *)str2);
-    }
-  }
+  sort_entry(sym_tab, sym_str_tab, sym_tab_header, flags->cmp_fn);
   for (uint32_t i = 0; i < sym_tab_header->sh_size / sizeof(Elf64_Sym); i++) {
     //print info like nm
     if (!sym_tab[i].st_name) {
       continue;
     }
     //filter out symbols with name ending with .c
-    if (sym_str_tab[sym_tab[i].st_name + strlen(sym_str_tab + sym_tab[i].st_name) - 2] == '.' && (
-          sym_str_tab[sym_tab[i].st_name + strlen(sym_str_tab + sym_tab[i].st_name) - 1] == 'c' || sym_str_tab[
-            sym_tab[i].st_name + strlen(sym_str_tab + sym_tab[i].st_name) - 1] == 'o')) {
+    if (flags->filter_fn(&sym_tab[i], sym_str_tab)) {
       continue;
     }
     print_value(file, &sym_tab[i]);

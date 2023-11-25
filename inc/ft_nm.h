@@ -16,6 +16,9 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+#include "libft.h"
+
+
 typedef struct shdr_64_s {
   Elf64_Shdr* section_header;
   struct shdr_64_s* next;
@@ -31,6 +34,13 @@ typedef struct {
   //32 bits
   Elf32_Ehdr* elf32_header;
 } t_nm;
+
+typedef int (*CmpFn)(Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+typedef int (*FilterFn)(Elf64_Sym* sym_tab, const char* sym_str_tab);
+typedef struct {
+  CmpFn cmp_fn;
+  FilterFn filter_fn;
+} t_flags;
 
 
 #define ALIGN_DOWN(x, align) ((x) & ~(align - 1))
