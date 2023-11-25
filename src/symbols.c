@@ -7,9 +7,7 @@
 #include "ft_nm.h"
 
 // char *st_bind_to_str(uint32_t st_bind) {
-// switch (st_bind) {
-// case STB_LOCAL:
-// return "LOCAL";
+// switch (st_bind) ;
 // case STB_GLOBAL:
 // return "GLOBAL";
 // case STB_WEAK:
@@ -124,67 +122,43 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
   Elf64_Shdr *shdr = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (sym->st_shndx * file->elf64_header->e_shentsize));
   Elf64_Shdr *shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (file->elf64_header->e_shstrndx * file->elf64_header->e_shentsize));
   char *section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
-  if (stringcmp(section_name, ".text") == 0 && bind == STB_GLOBAL)
-		return 'T';
-	else if (stringcmp(section_name, ".text") == 0 && bind == STB_LOCAL)
-		return 't';
-	else if (stringcmp(section_name, "completed.0") == 0 && bind == STB_GLOBAL)
-		return 'B';
-	else if (stringcmp(section_name, "completed.0") == 0 && bind == STB_LOCAL)
-		return 'b';
-	else if (stringcmp(section_name, ".fini") == 0 && bind == STB_GLOBAL)
-		return 'T';
-	else if (stringcmp(section_name, ".fini") == 0 && bind == STB_LOCAL)
-		return 't';
-	else if (stringcmp(section_name, ".data") == 0 && bind == STB_GLOBAL)
-		return 'D';
-	else if (stringcmp(section_name, ".data") == 0 && bind == STB_LOCAL)
-		return 'd';
-	else if (stringcmp(section_name, ".rodata") == 0 && bind == STB_GLOBAL)
-		return 'R';
-	else if (stringcmp(section_name, ".rodata") == 0 && bind == STB_LOCAL)
-		return 'r';
-	else if (stringcmp(section_name, ".bss") == 0 && bind == STB_GLOBAL)
-		return 'B';
-	else if (stringcmp(section_name, ".bss") == 0 && bind == STB_LOCAL)
-		return 'b';
-	else if (stringcmp(section_name, ".init") == 0 && bind == STB_GLOBAL)
-		return 'T';
-	else if (stringcmp(section_name, ".init") == 0 && bind == STB_LOCAL)
-		return 't';
-	else if (stringcmp(section_name, ".fini_array") == 0 && bind == STB_GLOBAL)
-		return 'D';
-	else if (stringcmp(section_name, ".fini_array") == 0 && bind == STB_LOCAL)
-		return 'd';
-	else if (stringcmp(section_name, ".init_array") == 0 && bind == STB_GLOBAL)
-		return 'D';
-	else if (stringcmp(section_name, ".init_array") == 0 && bind == STB_LOCAL)
-		return 'd';
-	else if (stringcmp(section_name, ".eh_frame") == 0 && bind == STB_GLOBAL)
-		return 'R';
-	else if (stringcmp(section_name, ".eh_frame") == 0 && bind == STB_LOCAL)
-		return 'r';
-	else if (stringcmp(section_name, ".dynamic") == 0 && bind == STB_GLOBAL)
-		return 'D';
-	else if (stringcmp(section_name, ".dynamic") == 0 && bind == STB_LOCAL)
-		return 'd';
-	else if (stringcmp(section_name, ".eh_frame_hdr") == 0 && bind == STB_GLOBAL)
-		return 'R';
-	else if (stringcmp(section_name, ".eh_frame_hdr") == 0 && bind == STB_LOCAL)
-		return 'r';
-	else if (stringcmp(section_name, ".got.plt") == 0 && bind == STB_GLOBAL)
-		return 'D';
-	else if (stringcmp(section_name, ".got.plt") == 0 && bind == STB_LOCAL)
-		return 'd';
-	else if (stringcmp(section_name, ".note.ABI-tag") == 0 && bind == STB_GLOBAL)
-		return 'R';
-	else if (stringcmp(section_name, ".note.ABI-tag") == 0 && bind == STB_LOCAL)
-		return 'r';
-
-	else
-    fprintf(stderr, "section name: %s\n", section_name);
-
-	return '?';
+  char result = 0;
+  if (stringcmp(section_name, ".text") == 0 )
+		result = 'T';
+	else if (stringcmp(section_name, "completed.0") == 0 )
+		result = 'B';
+	else if (stringcmp(section_name, ".fini") == 0 )
+		result = 'T';
+	else if (stringcmp(section_name, ".data") == 0 )
+		result = 'D';
+	else if (stringcmp(section_name, ".rodata") == 0 )
+		result = 'R';
+	else if (stringcmp(section_name, ".bss") == 0 )
+		result = 'B';
+	else if (stringcmp(section_name, ".init") == 0 )
+		result = 'T';
+	else if (stringcmp(section_name, ".fini_array") == 0 )
+		result = 'D';
+	else if (stringcmp(section_name, ".init_array") == 0 )
+		result = 'D';
+	else if (stringcmp(section_name, ".eh_frame") == 0 )
+		result = 'R';
+	else if (stringcmp(section_name, ".dynamic") == 0 )
+		result = 'D';
+	else if (stringcmp(section_name, ".eh_frame_hdr") == 0 )
+		result = 'R';
+	else if (stringcmp(section_name, ".got.plt") == 0 )
+		result = 'D';
+	else if (stringcmp(section_name, ".note.ABI-tag") == 0 )
+		result = 'R';
+  else {
+    printf("%s:", section_name);
+    result = '?';
+  }
+  if (bind == STB_LOCAL)  {
+    result = tolower(result);
+  }
+	return result;
 }
 
 void print_type(t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
