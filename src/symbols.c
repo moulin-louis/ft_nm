@@ -2,87 +2,7 @@
 // Created by loumouli on 11/24/23.
 //
 
-#include <ctype.h>
-
 #include "ft_nm.h"
-
-// char *st_bind_to_str(uint32_t st_bind) {
-// switch (st_bind) ;
-// case STB_GLOBAL:
-// return "GLOBAL";
-// case STB_WEAK:
-// return "WEAK";
-// case STB_LOOS:
-// return "LOOS";
-// case STB_HIOS:
-// return "HIOS";
-// case STB_LOPROC:
-// return "LOPROC";
-// case STB_HIPROC:
-// return "HIPROC";
-// default:
-// return "UNKNOWN";
-// }
-// }
-
-// char *st_type_to_str(uint32_t st_type) {
-// switch (st_type) {
-// case STT_NOTYPE:
-// return "NOTYPE";
-// case STT_OBJECT:
-// return "OBJECT";
-// case STT_FUNC:
-// return "FUNC";
-// case STT_SECTION:
-// return "SECTION";
-// case STT_FILE:
-// return "FILE";
-// case STT_COMMON:
-// return "COMMON";
-// case STT_TLS:
-// return "TLS";
-// case STT_LOOS:
-// return "LOOS";
-// case STT_HIOS:
-// return "HIOS";
-// case STT_LOPROC:
-// return "LOPROC";
-// case STT_HIPROC:
-// return "HIPROC";
-// default:
-// return "UNKNOWN";
-// }
-// }
-
-// char *st_other_to_str(uint32_t st_other) {
-// switch (st_other) {
-// case STV_DEFAULT:
-// return "DEFAULT";
-// case STV_INTERNAL:
-// return "INTERNAL";
-// case STV_HIDDEN:
-// return "HIDDEN";
-// case STV_PROTECTED:
-// return "PROTECTED";
-// case 0x04:
-// return "EXPORTED";
-// case 0x05:
-// return "SINGLETON";
-// case 0x06:
-// return "ELIMINATE";
-// default:
-// return "UNKNOWN";
-// }
-// }
-
-int stringcmp(const char* str1, const char* str2) {
-    while (*str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-    }
-
-    return *(unsigned char*)str1 - *(unsigned char*)str2;
-}
 
 char* to_lower(char* str) {
   for (uint32_t i = 0; i < strlen(str); i++) {
@@ -123,33 +43,33 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
   Elf64_Shdr *shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (file->elf64_header->e_shstrndx * file->elf64_header->e_shentsize));
   char *section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
   char result = 0;
-  if (stringcmp(section_name, ".text") == 0 )
+  if (strcmp(section_name, ".text") == 0 )
 		result = 'T';
-	else if (stringcmp(section_name, "completed.0") == 0 )
+	else if (strcmp(section_name, "completed.0") == 0 )
 		result = 'B';
-	else if (stringcmp(section_name, ".fini") == 0 )
+	else if (strcmp(section_name, ".fini") == 0 )
 		result = 'T';
-	else if (stringcmp(section_name, ".data") == 0 )
+	else if (strcmp(section_name, ".data") == 0 )
 		result = 'D';
-	else if (stringcmp(section_name, ".rodata") == 0 )
+	else if (strcmp(section_name, ".rodata") == 0 )
 		result = 'R';
-	else if (stringcmp(section_name, ".bss") == 0 )
+	else if (strcmp(section_name, ".bss") == 0 )
 		result = 'B';
-	else if (stringcmp(section_name, ".init") == 0 )
+	else if (strcmp(section_name, ".init") == 0 )
 		result = 'T';
-	else if (stringcmp(section_name, ".fini_array") == 0 )
+	else if (strcmp(section_name, ".fini_array") == 0 )
 		result = 'D';
-	else if (stringcmp(section_name, ".init_array") == 0 )
+	else if (strcmp(section_name, ".init_array") == 0 )
 		result = 'D';
-	else if (stringcmp(section_name, ".eh_frame") == 0 )
+	else if (strcmp(section_name, ".eh_frame") == 0 )
 		result = 'R';
-	else if (stringcmp(section_name, ".dynamic") == 0 )
+	else if (strcmp(section_name, ".dynamic") == 0 )
 		result = 'D';
-	else if (stringcmp(section_name, ".eh_frame_hdr") == 0 )
+	else if (strcmp(section_name, ".eh_frame_hdr") == 0 )
 		result = 'R';
-	else if (stringcmp(section_name, ".got.plt") == 0 )
+	else if (strcmp(section_name, ".got.plt") == 0 )
 		result = 'D';
-	else if (stringcmp(section_name, ".note.ABI-tag") == 0 )
+	else if (strcmp(section_name, ".note.ABI-tag") == 0 )
 		result = 'R';
   else {
     printf("%s:", section_name);

@@ -14,6 +14,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 typedef struct shdr_64_s {
   Elf64_Shdr* section_header;
