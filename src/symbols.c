@@ -77,6 +77,15 @@
 // }
 // }
 
+int stringcmp(const char* str1, const char* str2) {
+    while (*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+    }
+
+    return *(unsigned char*)str1 - *(unsigned char*)str2;
+}
+
 char* to_lower(char* str) {
   for (uint32_t i = 0; i < strlen(str); i++) {
     str[i] = tolower(str[i]);
@@ -173,7 +182,7 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
 		return 'r';
 
 	else
-		printfmt(STDERR_FILENO, "section_name: %s\n", section_name);
+    fprintf(stderr, "section name: %s\n", section_name);
 
 	return '?';
 }
