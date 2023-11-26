@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <signal.h>
 
 #include "libft.h"
 

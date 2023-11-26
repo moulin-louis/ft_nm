@@ -1,34 +1,50 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: loumouli <loumouli@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/02 14:50:33 by loumouli          #+#    #+#             */
-/*   Updated: 2022/05/11 12:09:08 by loumouli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// CODE BY MOTERO
 
-#include "../inc/libft.h"
+#include "libft.h"
+
+#if defined(__x86_64__) && defined(__SSE2__) && defined(__AVX__)
+
+void	*ft_memcpy(void *dst,
+	const void *src,
+	const size_t size)
+{
+	const size_t	src_alignment_offset = ((uintptr_t)src & 0x1F);
+	const size_t	dst_alignment_offset = ((uintptr_t)dst & 0x1F);
+
+	if (!src || !dst)
+		return (NULL);
+	if (size > 32 && src_alignment_offset < 1 && dst_alignment_offset < 1)
+		return (memcpy_avx(dst, src, size));
+	return (memcpy_x86(dst, src, size));
+}
+
+#else 
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t	x;
-	char	*result;
-	char	*temp_src;
+	char		*d;
+	const char	*s;
 
-	x = 0;
-	if (!dest && !src)
-		return (NULL);
-	result = (char *)dest;
-	temp_src = (char *)src;
-	while (x < n)
+	d = dest;
+	s = src;
+	while (n && (((long)d % sizeof(long) != 0)
+			|| ((long)s % sizeof(long) != 0)))
 	{
-		*result = *temp_src;
-		result++;
-		temp_src++;
-		x++;
+		*d++ = *s++;
+		n--;
 	}
-	return ((void *)result - x);
+	while (n >= sizeof(long))
+	{
+		*(long *)d = *(const long *)s;
+		d += sizeof(long);
+		s += sizeof(long);
+		n -= sizeof(long);
+	}
+	while (n)
+	{
+		*d++ = *s++;
+		n--;
+	}
+	return (dest);
 }
+#endif

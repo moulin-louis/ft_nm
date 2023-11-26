@@ -7,7 +7,11 @@ int32_t runtime_32(t_nm* bin);
 
 int32_t process_file(const char *path, t_flags* flags) {
   t_nm file = {};
+  file.path = (uint8_t *)ft_strdup(path);
+  if (file.path == NULL)
+    return 1;
   if (read_file(path, &file.raw_data, &file.data_len)) {
+    free(file.path);
     ft_putstr_fd("ft_nm: ", 2);
     ft_putstr_fd(path, 2);
     ft_putstr_fd(" ", 2);
@@ -17,6 +21,7 @@ int32_t process_file(const char *path, t_flags* flags) {
   }
   file.elf64_header = (Elf64_Ehdr *)file.raw_data;
   if (check_elf_header_64(file.elf64_header)) {
+    free(file.path);
     ft_putstr_fd("ft_nm: ", 2);
     ft_putstr_fd(path, 2);
     ft_putstr_fd(" ", 2);
@@ -31,10 +36,17 @@ int32_t process_file(const char *path, t_flags* flags) {
     free(tmp);
     tmp = next;
   }
+  free(file.path);
   return 0;
 }
 
+void handle_sigint(int sig) {
+  (void)sig;
+  exit(1);
+  return;
+}
 int main(const int ac, char** av) {
+  signal(SIGINT, handle_sigint);
   t_list* file = NULL;
   t_flags flags = {0};
   flags.cmp_fn = sym_strcmp;
