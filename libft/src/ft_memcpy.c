@@ -15,7 +15,7 @@ void	*ft_memcpy(void *dst,
 		return (NULL);
 	if (size > 32 && src_alignment_offset < 1 && dst_alignment_offset < 1)
 		return (memcpy_avx(dst, src, size));
-	return (memcpy_x86(dst, src, size));
+	return (memcpy_avx(dst, src, size));
 }
 
 #else 

@@ -69,7 +69,7 @@ void process_flags(const char* args, t_flags* flags) {
     flags->cmp_fn = sym_rev_strcmp;
   }
   if (ft_strncmp(args, "-p", len) == 0) {
-    flags->cmp_fn = sym_nocmp;
+    flags->cmp_fn = NULL;
   }
   if (ft_strncmp(args, "-a", len) == 0) {
     flags->filter_fn = no_filter;

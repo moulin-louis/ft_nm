@@ -15,9 +15,10 @@
 char	*ft_strdup(const char *s)
 {
 	size_t len = ft_strlen((char *)s);
-	char *result = malloc(sizeof(char) * (len + 1));
+	// char *result = malloc(len + 1);
+	char *result = aligned_alloc(32, len +1);
 	if (!result)
 		return (NULL);
-	ft_memcpy(result, s, len + 1);
+	memcpy(result, s, len + 1);
 	return (result);
 }

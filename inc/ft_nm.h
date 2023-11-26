@@ -36,12 +36,24 @@ typedef struct {
   Elf32_Ehdr* elf32_header;
 } t_nm;
 
-typedef int (*CmpFn)(const Elf64_Sym* sym_tab, const char* sym_str_tab, const int i, const int j);
-typedef int (*FilterFn)(Elf64_Sym* sym_tab, const char* sym_str_tab);
+typedef struct {
+  char *name;
+  size_t len_name;
+  size_t idx_start;
+  char type;
+  uint64_t value;
+  Elf64_Sym* sym;
+  bool dyn_located;
+} t_sym;
+
+typedef int (*CmpFn)(const void* node1, const void* node2);
+typedef int (*FilterFn)(const void* ptr);
+
 typedef struct {
   CmpFn cmp_fn;
   FilterFn filter_fn;
 } t_flags;
+
 
 
 #define ALIGN_DOWN(x, align) ((x) & ~(align - 1))

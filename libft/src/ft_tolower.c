@@ -12,7 +12,7 @@
 
 #include "../inc/libft.h"
 
-int	ft_tolower(int c)
+inline char	ft_tolower(char c)
 {
 	if (c >= 65 && c <= 90)
 		c = c + 32;

@@ -27,15 +27,15 @@ int32_t parse_sections_64(t_nm* file);
 int32_t extract_symbols_64(const t_nm* file, const t_flags* flags);
 int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr);
 int parse_args(int ac, char** av, t_list** head, t_flags* flags);
-
+int32_t print_error(const char *filename, const char *error);
 //COMPARE FN
-int sym_strcmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
-int sym_rev_strcmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
-int sym_nocmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+int sym_strcmp(const void* ptr1, const void* ptr2);
+int sym_rev_strcmp(const void* ptr1, const void* ptr2);
+int sym_nocmp(const void* ptr1, const void* ptr2);
 
 //FILTER FN
-int base_filter(Elf64_Sym* sym_tab, const char* sym_str_tab);
-int no_filter(Elf64_Sym* sym_tab, const char* sym_str_tab);
-int local_filter(Elf64_Sym* sym_tab, const char* sym_str_tab);
-int defined_filter(Elf64_Sym* sym_tab, const char* sym_str_tab);
+int base_filter(const void* ptr);
+int no_filter(const void* ptr);
+int local_filter(const void* ptr);
+int defined_filter(const void* ptr);
 #endif //WOODY_WOODPACKER_FUNCTIONS_H
