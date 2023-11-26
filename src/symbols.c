@@ -8,7 +8,7 @@
 
 
 
-void print_value(t_nm* file, const Elf64_Sym* sym) {
+void print_value(const t_nm* file, const Elf64_Sym* sym) {
   (void)file;
   if (sym->st_value == 0x0) {
     printf("                ");
@@ -18,7 +18,7 @@ void print_value(t_nm* file, const Elf64_Sym* sym) {
   }
 }
 
-char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
+char getSymType(const t_nm* file, const char* name, const Elf64_Sym* sym) {
   const int32_t bind = ELF64_ST_BIND(sym->st_info);
   const int32_t type = ELF64_ST_TYPE(sym->st_info);
   (void)name;
@@ -36,10 +36,10 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
     case SHN_UNDEF:
       return 'U';
   }
-  Elf64_Shdr *shdr = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (sym->st_shndx * file->elf64_header->e_shentsize));
-  Elf64_Shdr *shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + (file->elf64_header->e_shstrndx * file->elf64_header->e_shentsize));
+  const Elf64_Shdr *shdr = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + sym->st_shndx * file->elf64_header->e_shentsize);
+  const Elf64_Shdr *shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + file->elf64_header->e_shstrndx * file->elf64_header->e_shentsize);
   char *section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
-  char result = 0;
+  char result;
   if (ft_strncmp(section_name, ".text", ft_strlen(section_name)) == 0 )
 		result = 'T';
 	else if (ft_strncmp(section_name, "completed.0", ft_strlen(section_name)) == 0 )
@@ -78,21 +78,21 @@ char getSymType(t_nm* file, const char* name, const Elf64_Sym* sym) {
 	return result;
 }
 
-void print_type(t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
+void print_type(const t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
   const char c = getSymType(file, sym_str_tab + sym->st_name, sym);
   printf("%c", c);
 }
 
-void print_name(t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
+void print_name(const t_nm* file, const Elf64_Sym* sym, const char* sym_str_tab) {
   (void)file;
   printf("%s", sym_str_tab + sym->st_name);
 }
 
-void sort_entry(Elf64_Sym* sym_tab, char* sym_str_tab, const Elf64_Shdr* sym_tab_header, CmpFn cmp_fn) {
+void sort_entry(Elf64_Sym* sym_tab, const char* sym_str_tab, const Elf64_Shdr* sym_tab_header, const CmpFn cmp_fn) {
   for (uint32_t i = 0; i < sym_tab_header->sh_size / sizeof(Elf64_Sym); i++) {
     for (uint32_t j = i + 1; j < sym_tab_header->sh_size / sizeof(Elf64_Sym); j++) {
       if (cmp_fn(sym_tab, sym_str_tab, i, j) > 0) {
-        Elf64_Sym tmp = sym_tab[i];
+        const Elf64_Sym tmp = sym_tab[i];
         sym_tab[i] = sym_tab[j];
         sym_tab[j] = tmp;
       }
@@ -100,10 +100,10 @@ void sort_entry(Elf64_Sym* sym_tab, char* sym_str_tab, const Elf64_Shdr* sym_tab
   }
 }
 
-int32_t extract_symbols_64(t_nm* file, t_flags *flags) {
+int32_t extract_symbols_64(const t_nm* file, const t_flags *flags) {
   const Elf64_Shdr* sym_tab_header = NULL;
   const Elf64_Shdr* sym_str_tab_header = NULL;
-  for (shdr_list_64_t* tmp = file->sections_list; tmp != NULL; tmp = tmp->next) {
+  for (const shdr_list_64_t* tmp = file->sections_list; tmp != NULL; tmp = tmp->next) {
     if (tmp->section_header->sh_type == SHT_SYMTAB) {
       sym_tab_header = tmp->section_header;
       break;
@@ -117,7 +117,7 @@ int32_t extract_symbols_64(t_nm* file, t_flags *flags) {
     return 1;
   }
   uint32_t idx = 0;
-  for (shdr_list_64_t* tmp = file->sections_list; tmp != NULL; tmp = tmp->next) {
+  for (const shdr_list_64_t* tmp = file->sections_list; tmp != NULL; tmp = tmp->next) {
     if (idx == sym_tab_header->sh_link) {
       sym_str_tab_header = tmp->section_header;
       break;
@@ -132,7 +132,7 @@ int32_t extract_symbols_64(t_nm* file, t_flags *flags) {
     return 1;
   }
   Elf64_Sym* sym_tab = (Elf64_Sym *)(file->raw_data + sym_tab_header->sh_offset);
-  char* sym_str_tab = (char *)(file->raw_data + sym_str_tab_header->sh_offset);
+  const char* sym_str_tab = (char *)(file->raw_data + sym_str_tab_header->sh_offset);
   //sort symbols in alphabetical order
   sort_entry(sym_tab, sym_str_tab, sym_tab_header, flags->cmp_fn);
   for (uint32_t i = 0; i < sym_tab_header->sh_size / sizeof(Elf64_Sym); i++) {

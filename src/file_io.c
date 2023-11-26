@@ -5,7 +5,7 @@
 #include "ft_nm.h"
 
 //Read the entire file into memory
-int32_t read_file(const char *path, uint8_t** result, size_t* len) {
+int32_t read_file(const char* path, uint8_t** result, size_t* len) {
   const int file = open(path, O_RDONLY);
   if (file == -1) {
     return 1;

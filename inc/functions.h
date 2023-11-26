@@ -6,7 +6,7 @@
 #define WOODY_WOODPACKER_FUNCTIONS_H
 
 //I/O FUNCTION
-int32_t read_file(const char *file, uint8_t** result, uint64_t* len);
+int32_t read_file(const char *path, uint8_t** result, uint64_t* len);
 
 int32_t save_new_file(const t_nm* ptr);
 
@@ -24,14 +24,14 @@ __attribute__((unused)) void print_elf_header_32(Elf32_Ehdr* header);
 __attribute__((unused)) void print_elf_header_64(Elf64_Ehdr* header);
 
 int32_t parse_sections_64(t_nm* file);
-int32_t extract_symbols_64(t_nm* file, t_flags* flags);
+int32_t extract_symbols_64(const t_nm* file, const t_flags* flags);
 int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr);
 int parse_args(int ac, char** av, t_list** head, t_flags* flags);
 
 //COMPARE FN
-int sym_strcmp(Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
-int sym_rev_strcmp(Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
-int sym_nocmp(Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+int sym_strcmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+int sym_rev_strcmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+int sym_nocmp(const Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
 
 //FILTER FN
 int base_filter(Elf64_Sym* sym_tab, const char* sym_str_tab);

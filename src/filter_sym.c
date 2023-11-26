@@ -5,10 +5,10 @@
 #include "ft_nm.h"
 
 int base_filter(Elf64_Sym* sym_tab, const char* sym_str_tab) {
-     if (sym_str_tab[sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 2] == '.' && (
-          sym_str_tab[sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 1] == 'c' || sym_str_tab[
-            sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 1] == 'o')) {
-      return 1;
+    if (sym_str_tab[sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 2] == '.' && (
+            sym_str_tab[sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 1] == 'c' || sym_str_tab[
+                sym_tab->st_name + ft_strlen(sym_str_tab + sym_tab->st_name) - 1] == 'o')) {
+        return 1;
     }
     return 0;
 }

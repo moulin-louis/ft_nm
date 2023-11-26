@@ -36,7 +36,7 @@ typedef struct {
   Elf32_Ehdr* elf32_header;
 } t_nm;
 
-typedef int (*CmpFn)(Elf64_Sym* sym_tab, const char* sym_str_tab, int i, int j);
+typedef int (*CmpFn)(const Elf64_Sym* sym_tab, const char* sym_str_tab, const int i, const int j);
 typedef int (*FilterFn)(Elf64_Sym* sym_tab, const char* sym_str_tab);
 typedef struct {
   CmpFn cmp_fn;

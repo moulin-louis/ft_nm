@@ -5,7 +5,7 @@ int32_t runtime_32(t_nm* bin);
 //check health elf header from file
 
 
-int32_t process_file(const char *path, t_flags* flags) {
+int32_t process_file(const char* path, const t_flags* flags) {
   t_nm file = {};
   file.path = (uint8_t *)ft_strdup(path);
   if (file.path == NULL)
@@ -31,8 +31,8 @@ int32_t process_file(const char *path, t_flags* flags) {
   parse_sections_64(&file);
   extract_symbols_64(&file, flags);
   free(file.raw_data);
-  for (shdr_list_64_t *tmp = file.sections_list; tmp != NULL;) {
-    shdr_list_64_t *next = tmp->next;
+  for (shdr_list_64_t* tmp = file.sections_list; tmp != NULL;) {
+    shdr_list_64_t* next = tmp->next;
     free(tmp);
     tmp = next;
   }
@@ -40,11 +40,11 @@ int32_t process_file(const char *path, t_flags* flags) {
   return 0;
 }
 
-void handle_sigint(int sig) {
+void handle_sigint(const int sig) {
   (void)sig;
   exit(1);
-  return;
 }
+
 int main(const int ac, char** av) {
   signal(SIGINT, handle_sigint);
   t_list* file = NULL;
@@ -54,11 +54,11 @@ int main(const int ac, char** av) {
   if (parse_args(ac, av, &file, &flags)) {
     return 1;
   }
-  t_list *tmp = NULL;
-  if (file == NULL) 
+  t_list* tmp = NULL;
+  if (file == NULL)
     process_file("./a.out", &flags);
   else {
-    for (t_list *node = file; node; node = node->next) {
+    for (const t_list* node = file; node; node = node->next) {
       process_file(node->content, &flags);
     }
   }

@@ -24,7 +24,8 @@ int32_t sections_push_back_64(t_nm* file, Elf64_Shdr* segment) {
 int32_t parse_sections_64(t_nm* file) {
   const uint64_t offset_section_table = file->elf64_header->e_shoff;
   uint8_t* sections_table = file->raw_data + offset_section_table;
-  for (uint32_t idx = 0; idx < (file->elf64_header->e_shnum * file->elf64_header->e_shentsize); idx += file->elf64_header->e_shentsize) {
+  for (uint32_t idx = 0; idx < file->elf64_header->e_shnum * file->elf64_header->e_shentsize;
+       idx += file->elf64_header->e_shentsize) {
     if (sections_push_back_64(file, (Elf64_Shdr *)(sections_table + idx))) {
       return 1;
     }
@@ -48,22 +49,22 @@ int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr) {
   return 0;
 }
 
-int is_flags(const char *args) {
-  size_t len  = ft_strlen(args);
+int is_flags(const char* args) {
+  const size_t len = ft_strlen(args);
   if (
     ft_strncmp(args, "-a", len) == 0 ||
     ft_strncmp(args, "-g", len) == 0 ||
     ft_strncmp(args, "-u", len) == 0 ||
     ft_strncmp(args, "-r", len) == 0 ||
     ft_strncmp(args, "-p", len) == 0
-    ) {
+  ) {
     return 1;
   }
   return 0;
 }
 
-void process_flags(const char *args, t_flags* flags) {
-  size_t len  = ft_strlen(args);
+void process_flags(const char* args, t_flags* flags) {
+  const size_t len = ft_strlen(args);
   if (ft_strncmp(args, "-r", len) == 0) {
     flags->cmp_fn = sym_rev_strcmp;
   }
@@ -81,7 +82,7 @@ void process_flags(const char *args, t_flags* flags) {
   }
 }
 
-int add_to_head(t_list **head, const char *args) {
+int add_to_head(t_list** head, const char* args) {
   t_list* node = ft_calloc(sizeof(t_list), 1);
   if (node == NULL)
     return 1;
@@ -102,7 +103,7 @@ int add_to_head(t_list **head, const char *args) {
   return 0;
 }
 
-int parse_args(int ac, char **av, t_list **head, t_flags* flags) {
+int parse_args(const int ac, char** av, t_list** head, t_flags* flags) {
   for (int idx = 1; idx < ac; idx++) {
     if (is_flags(av[idx])) {
       process_flags(av[idx], flags);
