@@ -5,7 +5,7 @@ set(CMAKE_C_COMPILER "/usr/bin/clang")
 set(CMAKE_C_STANDARD 23)
 
 include_directories(./inc )
-add_compile_options( -pg -Wall -Werror -Wextra -O3 -mavx -msse2)
+add_compile_options(-Wall -Werror -Wextra -O3 -mavx -msse2 -march=native)
 
 add_library(ft STATIC ./src/ft_atoi.c
 ./src/ft_calloc.c 		
@@ -52,6 +52,5 @@ add_library(ft STATIC ./src/ft_atoi.c
 ./src/ft_lstmap.c			
 ./src/ft_lstnew.c			
 ./src/ft_lstsize.c		
-./src/clean_split.c
-        src/ft_lstfilter.c
-        src/ft_lstsort.c)
+./src/clean_split.c src/ft_lstfilter.c
+src/ft_lstsort.c)

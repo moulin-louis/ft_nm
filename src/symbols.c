@@ -186,9 +186,9 @@ int32_t extract_symbols_64(const t_nm* file, const t_flags* flags) {
   filter_lst(&head, flags->filter_fn, free_sym);
   dprintf(1, "\nSorting symbols\n");
   dprintf(1, "size lst = %d\n", ft_lstsize(head));
-  // ft_lstsort(head, flags->cmp_fn);
-  // dprintf(1, "\nDisplaying symbols\n");
-  // display_symbols(head);
+  ft_lstsort(head, flags->cmp_fn);
+  dprintf(1, "\nDisplaying symbols\n");
+  display_symbols(head);
   ft_lstclear(&head, free_sym);
  return 0;
 }
