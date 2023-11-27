@@ -28,7 +28,7 @@ int32_t read_file(const char* path, uint8_t** result, size_t* len) {
   }
   set.data = malloc(1024);
   if (set.data == NULL) {
-    close (file);
+    close(file);
     return 2;
   }
   set.capacity = 1024;
@@ -54,7 +54,7 @@ int32_t read_file(const char* path, uint8_t** result, size_t* len) {
   return 0;
 }
 
-int32_t print_error(const char *filename, const char *error) {
+int32_t print_error(const char* filename, const char* error) {
   ft_putstr_fd("ft_nm: ", 2);
   ft_putstr_fd(filename, 2);
   ft_putstr_fd(" ", 2);
@@ -64,28 +64,29 @@ int32_t print_error(const char *filename, const char *error) {
 }
 
 inline char hex_char(int value) {
-    if (value >= 0 && value < 10) {
-        return '0' + value;
-    } else {
-        return 'a' + (value - 10);
-    }
+  if (value >= 0 && value < 10) {
+    return '0' + value;
+  }
+  else {
+    return 'a' + (value - 10);
+  }
 }
 
 // Function to convert an unsigned long to a hexadecimal string with leading zeros
-inline void ulong_to_hex_str(unsigned long value, char *str, int len) {
-    for (int i = len - 1; i >= 0; i--) {
-        str[i] = hex_char(value % 16);
-        value /= 16;
-    }
-    str[len] = '\0'; // Null-terminate the string
+inline void ulong_to_hex_str(unsigned long value, char* str, int len) {
+  for (int i = len - 1; i >= 0; i--) {
+    str[i] = hex_char(value % 16);
+    value /= 16;
+  }
+  str[len] = '\0'; // Null-terminate the string
 }
 
 // Function to print an unsigned long in hexadecimal format
 void print_hex(unsigned long value, int fd) {
-    char hex_string[17]; // 16 characters for the hexadecimal representation + 1 for null terminator
-    ft_memset(hex_string, '0', 17);
-    ulong_to_hex_str(value, hex_string, 16);
-    ft_putstr_fd(hex_string, fd);
+  char hex_string[17]; // 16 characters for the hexadecimal representation + 1 for null terminator
+  ft_memset(hex_string, '0', 17);
+  ulong_to_hex_str(value, hex_string, 16);
+  ft_putstr_fd(hex_string, fd);
 }
 
 // __attribute__((unused)) void hexdump(void* data, size_t len, int32_t row) {

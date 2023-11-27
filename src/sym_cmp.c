@@ -6,7 +6,7 @@
 
 #include "ft_nm.h"
 
-char* to_lower(char* str, size_t len) {
+char* to_lower(char* str, const size_t len) {
   for (uint32_t i = 0; i < len; i++) {
     str[i] = tolower(str[i]);
   }
@@ -22,13 +22,13 @@ char do_nothing(char c) {
 }
 
 int sym_strcmp(const void* ptr1, const void* ptr2) {
-  const t_sym* node1 = (t_sym*)ptr1;
-  const t_sym* node2 = (t_sym*)ptr2;
+  const t_sym* node1 = (t_sym *)ptr1;
+  const t_sym* node2 = (t_sym *)ptr2;
   return ft_strcmp(node1->name, node2->name);
 }
 
 int sym_rev_strcmp(const void* ptr1, const void* ptr2) {
-  const t_sym* node1 = (t_sym*)ptr1;
-  const t_sym* node2 = (t_sym*)ptr2;
+  const t_sym* node1 = (t_sym *)ptr1;
+  const t_sym* node2 = (t_sym *)ptr2;
   return ft_strcmp(node2->name, node1->name);
 }
