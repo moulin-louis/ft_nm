@@ -23,8 +23,6 @@ Elf64_Shdr* get_header_idx_64(const t_nm* file, const uint32_t shndx) {
   return NULL;
 }
 
-
-
 int32_t add_sym_node(const t_nm* file, t_list** head, Elf64_Sym* data, const char* sym_str_tab,
                      const bool dyn_located) {
   t_list* node = malloc(sizeof(t_list));
@@ -87,10 +85,10 @@ t_list* craft_linked_list(
 
 void display_symbols(const t_list* head) {
   for (const t_list* tmp = head; tmp != NULL; tmp = tmp->next) {
-    if (((t_sym*)tmp->content)->type == 'U' || (((t_sym *)tmp->content)->value == 0x0 && ((t_sym *)tmp->content)->type != 'a' && ((t_sym *)tmp->content)->type!= 'T'))
+    if (((t_sym*)tmp->content)->type == 'U'
+      || (((t_sym *)tmp->content)->value == 0x0 && ((t_sym *)tmp->content)->type != 'a' && ((t_sym *)tmp->content)->type!= 'T' && ((t_sym *)tmp->content)->type != 'b') )
       ft_putstr_fd("                ", 1);
     else {
-      // ft_putstr_fd("PRINTING HEXA\n", 1);
       print_hex(((t_sym *)tmp->content)->value, 1);
     }
     ft_putchar_fd(' ', 1);
@@ -125,6 +123,7 @@ int32_t extract_symbols_64(const t_nm* file, const t_flags* flags) {
   t_list* head = craft_linked_list(file, sym_tab_header, sym_str_tab_header, dyn_sym_header, dyn_str_tab_header);
   filter_lst(&head, flags->filter_fn, free_sym);
   ft_lstsort(head, flags->cmp_fn);
+  // ft_lstsort(head, sym_val_strcmp);
   display_symbols(head);
   ft_lstclear(&head, free_sym);
   return 0;

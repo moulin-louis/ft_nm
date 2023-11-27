@@ -6,13 +6,6 @@
 
 #include "ft_nm.h"
 
-char* to_lower(char* str, const size_t len) {
-  for (uint32_t i = 0; i < len; i++) {
-    str[i] = tolower(str[i]);
-  }
-  return str;
-}
-
 inline int sym_nocmp(const void* ptr1 __attribute__((unused)), const void* ptr2 __attribute__((unused))) {
   return 0;
 }

@@ -69,11 +69,68 @@ char		_64_print_SymType_sec_suite(const t_nm* file, Elf64_Sym* sym) {
   return (c);
 }
 
+char get_symbol_type(const t_nm* file, const Elf64_Sym* sym) {
+  unsigned char type = ELF64_ST_TYPE(sym->st_info);
+  unsigned char bind = ELF64_ST_BIND(sym->st_info);
+
+  // Undefined symbol
+  if (sym->st_shndx == SHN_UNDEF) {
+    return 'U';
+  }
+
+  // Absolute symbol
+  if (sym->st_shndx == SHN_ABS) {
+    return 'A';
+  }
+
+  // Common symbol
+  if (type == STT_COMMON) {
+    return 'C';
+  }
+
+  // Section type and other special cases
+  switch (get_header_idx_64(file, sym->st_shndx)->sh_type) {
+    case SHT_PROGBITS:
+      if (get_header_idx_64(file, sym->st_shndx)->sh_flags & SHF_ALLOC) {
+        if (get_header_idx_64(file, sym->st_shndx)->sh_flags & SHF_WRITE) {
+          // Initialized data section
+          return bind == STB_LOCAL ? 'd' : 'D';
+        } else if (get_header_idx_64(file, sym->st_shndx)->sh_flags & SHF_EXECINSTR) {
+          // Code section
+          return bind == STB_LOCAL ? 't' : 'T';
+        } else {
+          // Read-only data section
+          return bind == STB_LOCAL ? 'r' : 'R';
+        }
+      }
+    break;
+
+    case SHT_NOBITS:
+      // Uninitialized data section
+        return bind == STB_LOCAL ? 'b' : 'B';
+
+    default:
+      break;
+  }
+
+  // Weak symbols
+  if (bind == STB_WEAK) {
+    return type == STT_OBJECT ? 'V' : 'W';
+  }
+
+  // Other cases
+  return '?';  // Unknown type
+}
+
 char getSymType(const t_nm* file, const Elf64_Sym* sym) {
+  // return get_symbol_type(file, sym);
   const int32_t bind = ELF64_ST_BIND(sym->st_info);
   const int32_t type = ELF64_ST_TYPE(sym->st_info);
-  if (type == STT_FILE || type == STT_SECTION) {
+  if (type == STT_FILE){
     return 'a';
+  }
+  if (type == STT_SECTION) {
+    return 'n';
   }
   if (bind == STB_WEAK) {
     if (type == STT_OBJECT) {
@@ -106,9 +163,13 @@ char getSymType(const t_nm* file, const Elf64_Sym* sym) {
     result = 'T';
   else if (ft_strncmp(section_name, ".data", len) == 0)
     result = 'D';
+  else if (ft_strncmp(section_name, ".data.rel.ro", len) == 0)
+    result = 'D';
   else if (ft_strncmp(section_name, ".rodata", len) == 0)
     result = 'R';
   else if (ft_strncmp(section_name, ".bss", len) == 0)
+    result = 'B';
+  else if (ft_strncmp(section_name, ".tbss", len) == 0)
     result = 'B';
   else if (ft_strncmp(section_name, ".init", len) == 0)
     result = 'T';

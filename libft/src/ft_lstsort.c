@@ -15,5 +15,16 @@ void ft_lstsort(t_list* head, int (*cmp_fn)(const void*, const void*)) {
         j->content = tmp;
       }
     }
+    // check if i->next has the same value as i
+    if (i->next != NULL && cmp_fn(i->content, i->next->content) == 0) {
+      // if so, we need to append i to the end of the node with the same value
+      t_list* last_node = i;
+      while (last_node != NULL && cmp_fn(i->content, last_node->content) == 0) {
+        last_node = last_node->next;
+      }
+      //we append i to last_node
+      i->next = last_node->next;
+      last_node->next = i;
+    }
   }
 }

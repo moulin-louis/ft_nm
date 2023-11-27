@@ -30,6 +30,7 @@ int parse_args(int ac, char** av, t_list** head, t_flags* flags);
 int32_t print_error(const char *filename, const char *error);
 char getSymType(const t_nm* file, const Elf64_Sym* sym);
 Elf64_Shdr* get_header_idx_64(const t_nm* file, const uint32_t shndx);
+Elf64_Shdr* get_header_type_64(const t_nm* file, const uint64_t type);
 char		_64_print_SymType(const t_nm* file, Elf64_Sym* sym);
 //COMPARE FN
 int sym_strcmp(const void* ptr1, const void* ptr2);
