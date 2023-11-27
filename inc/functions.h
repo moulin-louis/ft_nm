@@ -28,6 +28,9 @@ int32_t extract_symbols_64(const t_nm* file, const t_flags* flags);
 int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr);
 int parse_args(int ac, char** av, t_list** head, t_flags* flags);
 int32_t print_error(const char *filename, const char *error);
+char getSymType(const t_nm* file, const Elf64_Sym* sym);
+Elf64_Shdr* get_header_idx_64(const t_nm* file, const uint32_t shndx);
+char		_64_print_SymType(const t_nm* file, Elf64_Sym* sym);
 //COMPARE FN
 int sym_strcmp(const void* ptr1, const void* ptr2);
 int sym_rev_strcmp(const void* ptr1, const void* ptr2);

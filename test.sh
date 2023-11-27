@@ -8,7 +8,7 @@ function run_diff_null {
 }
 
 function run_diff() {
-    diff --color=auto -y diff1 diff2
+    diff --color=always -y diff1 diff2
 }
 
 function check_test {
@@ -44,4 +44,13 @@ check_test 6
 ./cmake-build-debug/ft_nm ./sample/test -u > diff1
 nm ./sample/test -u > diff2
 check_test 7
+./cmake-build-debug/ft_nm ./sample/test.o ./sample/test > diff1
+nm ./sample/test.o ./sample/test > diff2
+check_test 8
+./cmake-build-debug/ft_nm ./sample/test.o ./sample/test -r > diff1
+nm ./sample/test.o ./sample/test -r > diff2
+check_test 9
+./cmake-build-debug/ft_nm $(which fish) > diff1
+nm $(which fish) > diff2
+check_test 10
 rm diff1 diff2

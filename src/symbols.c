@@ -23,65 +23,7 @@ Elf64_Shdr* get_header_idx_64(const t_nm* file, const uint32_t shndx) {
   return NULL;
 }
 
-char getSymType(const t_nm* file, const Elf64_Sym* sym) {
-  const int32_t bind = ELF64_ST_BIND(sym->st_info);
-  const int32_t type = ELF64_ST_TYPE(sym->st_info);
-  if (type == STT_FILE || type == STT_SECTION) {
-    return 'a';
-  }
-  if (bind == STB_WEAK) {
-    if (sym->st_value)
-      return 'W';
-    return 'w';
-  }
-  switch (sym->st_shndx) {
-    case SHN_ABS:
-      return 'A';
-    case SHN_UNDEF:
-      return 'U';
-  }
-  const Elf64_Shdr* shdr = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + sym->st_shndx * file->
-                                          elf64_header->e_shentsize);
-  const Elf64_Shdr* shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + file->elf64_header->
-                                             e_shstrndx * file->elf64_header->e_shentsize);
-  const char* section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
-  char result;
-  if (ft_strncmp(section_name, ".text", ft_strlen(section_name)) == 0)
-    result = 'T';
-  else if (ft_strncmp(section_name, "completed.0", ft_strlen(section_name)) == 0)
-    result = 'B';
-  else if (ft_strncmp(section_name, ".fini", ft_strlen(section_name)) == 0)
-    result = 'T';
-  else if (ft_strncmp(section_name, ".data", ft_strlen(section_name)) == 0)
-    result = 'D';
-  else if (ft_strncmp(section_name, ".rodata", ft_strlen(section_name)) == 0)
-    result = 'R';
-  else if (ft_strncmp(section_name, ".bss", ft_strlen(section_name)) == 0)
-    result = 'B';
-  else if (ft_strncmp(section_name, ".init", ft_strlen(section_name)) == 0)
-    result = 'T';
-  else if (ft_strncmp(section_name, ".fini_array", ft_strlen(section_name)) == 0)
-    result = 'D';
-  else if (ft_strncmp(section_name, ".init_array", ft_strlen(section_name)) == 0)
-    result = 'D';
-  else if (ft_strncmp(section_name, ".eh_frame", ft_strlen(section_name)) == 0)
-    result = 'R';
-  else if (ft_strncmp(section_name, ".dynamic", ft_strlen(section_name)) == 0)
-    result = 'D';
-  else if (ft_strncmp(section_name, ".eh_frame_hdr", ft_strlen(section_name)) == 0)
-    result = 'R';
-  else if (ft_strncmp(section_name, ".got.plt", ft_strlen(section_name)) == 0)
-    result = 'D';
-  else if (ft_strncmp(section_name, ".note.ABI-tag", ft_strlen(section_name)) == 0)
-    result = 'R';
-  else {
-    result = '?';
-  }
-  if (bind == STB_LOCAL) {
-    result = tolower(result);
-  }
-  return result;
-}
+
 
 int32_t add_sym_node(const t_nm* file, t_list** head, Elf64_Sym* data, const char* sym_str_tab,
                      const bool dyn_located) {
@@ -145,8 +87,7 @@ t_list* craft_linked_list(
 
 void display_symbols(const t_list* head) {
   for (const t_list* tmp = head; tmp != NULL; tmp = tmp->next) {
-    if (((t_sym *)tmp->content)->value == 0x0 && ((t_sym *)tmp->content)->type != 'a' && ((t_sym *)tmp->content)->type
-        != 'T')
+    if (((t_sym*)tmp->content)->type == 'U' || (((t_sym *)tmp->content)->value == 0x0 && ((t_sym *)tmp->content)->type != 'a' && ((t_sym *)tmp->content)->type!= 'T'))
       ft_putstr_fd("                ", 1);
     else {
       // ft_putstr_fd("PRINTING HEXA\n", 1);

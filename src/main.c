@@ -51,8 +51,21 @@ int main(const int ac, char** av) {
   if (file == NULL)
     process_file("./a.out", &flags);
   else {
+    bool format = false;
+    if (ft_lstsize(file) > 1) {
+      format = true;
+      ft_putchar_fd('\n', 1);
+    }
     for (const t_list* node = file; node; node = node->next) {
-      process_file(node->content, &flags);
+      if (format) {
+        ft_putstr_fd(node->content, 1);
+        ft_putstr_fd(":\n", 1);
+        process_file(node->content, &flags);
+        if (node->next)
+          ft_putchar_fd('\n', 1);
+      }
+      else
+        process_file(node->content, &flags);
     }
   }
   while (file) {

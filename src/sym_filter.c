@@ -12,6 +12,8 @@ int base_filter(const void* ptr) {
         return 1;
     if (node->name[0] == '\0')
         return 1;
+    if (node->type == 'a')
+        return 1;
     if (node->len_name <= 3)
         return 0;
     if (node->name[node->len_name - 2] == '.' && (
