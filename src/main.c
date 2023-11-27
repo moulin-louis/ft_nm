@@ -8,7 +8,6 @@ int32_t runtime_32(t_nm* bin);
 
 
 int32_t process_file(const char* path, const t_flags* flags) {
-  // dprintf(1,"\nProcessing file\n");
   t_nm file = {};
   file.path = (uint8_t *)ft_strdup(path);
   if (file.path == NULL)
@@ -23,7 +22,6 @@ int32_t process_file(const char* path, const t_flags* flags) {
     return print_error(path, "file format not recognized");
   }
   parse_sections_64(&file);
-  // (void)flags;
   extract_symbols_64(&file, flags);
   free(file.raw_data);
   for (shdr_list_64_t* tmp = file.sections_list; tmp != NULL;) {

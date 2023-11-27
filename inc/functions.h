@@ -9,7 +9,7 @@
 int32_t read_file(const char *path, uint8_t** result, uint64_t* len);
 
 int32_t save_new_file(const t_nm* ptr);
-
+void print_hex(unsigned long value, int fd);
 //PARSING FUNCTION
 int32_t parse_program_headers_64(t_nm* bin);
 int32_t parse_program_headers_32(t_nm* bin);
@@ -38,4 +38,6 @@ int base_filter(const void* ptr);
 int no_filter(const void* ptr);
 int local_filter(const void* ptr);
 int defined_filter(const void* ptr);
+
+
 #endif //WOODY_WOODPACKER_FUNCTIONS_H

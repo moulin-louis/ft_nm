@@ -44,3 +44,4 @@ check_test 6
 ./cmake-build-debug/ft_nm ./sample/test -u > diff1
 nm ./sample/test -u > diff2
 check_test 7
+rm diff1 diff2

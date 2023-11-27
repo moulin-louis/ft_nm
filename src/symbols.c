@@ -146,8 +146,10 @@ void display_symbols(const t_list *head) {
   for (const t_list* tmp = head; tmp != NULL; tmp = tmp->next) {
     if (((t_sym*)tmp->content)->value == 0x0 && ((t_sym*)tmp->content)->type != 'a' && ((t_sym*)tmp->content)->type != 'T')
       ft_putstr_fd("                ", 1);
-    else
-      dprintf(1, "%016lx", ((t_sym*)tmp->content)->value);
+    else {
+      // ft_putstr_fd("PRINTING HEXA\n", 1);
+      print_hex(((t_sym*)tmp->content)->value, 1);
+    }
     ft_putchar_fd(' ', 1);
     ft_putchar_fd(((t_sym*)tmp->content)->type, 1);
     ft_putchar_fd(' ', 1);

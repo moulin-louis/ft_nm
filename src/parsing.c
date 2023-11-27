@@ -35,7 +35,7 @@ int32_t parse_sections_64(t_nm* file) {
 
 int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr) {
   //check for the magic number
-  if (memcmp(elf64Ehdr, "\x7F" "ELF", 4) != 0) {
+  if (ft_memcmp(elf64Ehdr, "\x7F" "ELF", 4) != 0) {
     return 1;
   }
   //check for the elf version
@@ -86,7 +86,7 @@ int add_to_head(t_list** head, const char* args) {
   t_list* node = ft_calloc(sizeof(t_list), 1);
   if (node == NULL)
     return 1;
-  node->content = strdup(args);
+  node->content = ft_strdup(args);
   if (node->content == NULL) {
     free(node);
     return 1;
