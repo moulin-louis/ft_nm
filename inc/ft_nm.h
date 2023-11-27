@@ -19,7 +19,6 @@
 
 #include "libft.h"
 
-
 typedef struct shdr_64_s {
   Elf64_Shdr* section_header;
   struct shdr_64_s* next;
@@ -54,6 +53,11 @@ typedef struct {
   FilterFn filter_fn;
 } t_flags;
 
+typedef struct {
+  uint8_t* data;
+  size_t len;
+  size_t capacity;
+} t_set;
 
 
 #define ALIGN_DOWN(x, align) ((x) & ~(align - 1))

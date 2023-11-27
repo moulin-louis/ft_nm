@@ -8,32 +8,22 @@ int32_t runtime_32(t_nm* bin);
 
 
 int32_t process_file(const char* path, const t_flags* flags) {
-  dprintf(1,"\nProcessing file\n");
+  // dprintf(1,"\nProcessing file\n");
   t_nm file = {};
   file.path = (uint8_t *)ft_strdup(path);
   if (file.path == NULL)
     return 1;
-  dprintf(1, "\nReading file\n");
   if (read_file(path, &file.raw_data, &file.data_len)) {
     free(file.path);
-    ft_putstr_fd("ft_nm: ", 2);
-    ft_putstr_fd(path, 2);
-    ft_putstr_fd(" ", 2);
-    ft_putstr_fd(strerror(errno), 2);
-    ft_putstr_fd("\n", 2);
-    return 1;
+    return print_error(path, strerror(errno));
   }
   file.elf64_header = (Elf64_Ehdr *)file.raw_data;
   if (check_elf_header_64(file.elf64_header)) {
     free(file.path);
-    ft_putstr_fd("ft_nm: ", 2);
-    ft_putstr_fd(path, 2);
-    ft_putstr_fd(" ", 2);
-    ft_putstr_fd("file format not recognized\n", 2);
-    return 1;
+    return print_error(path, "file format not recognized");
   }
-  dprintf(1, "Parsing sections\n");
   parse_sections_64(&file);
+  // (void)flags;
   extract_symbols_64(&file, flags);
   free(file.raw_data);
   for (shdr_list_64_t* tmp = file.sections_list; tmp != NULL;) {
@@ -56,7 +46,6 @@ int main(const int ac, char** av) {
   t_flags flags = {0};
   flags.cmp_fn = sym_strcmp;
   flags.filter_fn = base_filter;
-  dprintf(1, "Parsing args\n");
   if (parse_args(ac, av, &file, &flags)) {
     return 1;
   }

@@ -23,6 +23,8 @@ int no_filter(const void* ptr __attribute__((unused))) {
     const t_sym* node = (t_sym*)ptr;
     if (node->dyn_located)
         return 1;
+    if (node->name[0] == '\0' && node->type == 'U')
+        return 1;
     return 0;
 }
 

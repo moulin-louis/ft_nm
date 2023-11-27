@@ -44,7 +44,7 @@ char getSymType(const t_nm* file, const Elf64_Sym* sym) {
                                           elf64_header->e_shentsize);
   const Elf64_Shdr* shstrtb = (Elf64_Shdr *)(file->raw_data + file->elf64_header->e_shoff + file->elf64_header->
                                              e_shstrndx * file->elf64_header->e_shentsize);
-  char* section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
+  const char* section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
   char result;
   if (ft_strncmp(section_name, ".text", ft_strlen(section_name)) == 0)
     result = 'T';
@@ -144,7 +144,7 @@ t_list* craft_linked_list(
 
 void display_symbols(const t_list *head) {
   for (const t_list* tmp = head; tmp != NULL; tmp = tmp->next) {
-    if (((t_sym*)tmp->content)->value == 0x0 && ((t_sym*)tmp->content)->type != 'a')
+    if (((t_sym*)tmp->content)->value == 0x0 && ((t_sym*)tmp->content)->type != 'a' && ((t_sym*)tmp->content)->type != 'T')
       ft_putstr_fd("                ", 1);
     else
       dprintf(1, "%016lx", ((t_sym*)tmp->content)->value);
@@ -177,17 +177,9 @@ int32_t extract_symbols_64(const t_nm* file, const t_flags* flags) {
   const Elf64_Shdr* dyn_str_tab_header = NULL;
   if (dyn_sym_header)
     dyn_str_tab_header = get_header_idx_64(file, dyn_sym_header->sh_link);
-  dprintf(1, "\nCrafing linked list\n");
   t_list* head = craft_linked_list(file, sym_tab_header, sym_str_tab_header, dyn_sym_header, dyn_str_tab_header);
-  (void)flags;
-  dprintf(1, "\nRemoving empty names\n");
-  filter_lst(&head, is_empty_name, free_sym);
-  dprintf(1, "\nRemoving unwanted symbols\n");
   filter_lst(&head, flags->filter_fn, free_sym);
-  dprintf(1, "\nSorting symbols\n");
-  dprintf(1, "size lst = %d\n", ft_lstsize(head));
   ft_lstsort(head, flags->cmp_fn);
-  dprintf(1, "\nDisplaying symbols\n");
   display_symbols(head);
   ft_lstclear(&head, free_sym);
  return 0;
