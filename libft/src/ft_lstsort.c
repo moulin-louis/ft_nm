@@ -3,28 +3,36 @@
 //
 
 #include "libft.h"
-
+#include <stdbool.h>
 void ft_lstsort(t_list* head, int (*cmp_fn)(const void*, const void*)) {
   if (cmp_fn == NULL)
     return;
-  for (t_list* i = head; i != NULL; i = i->next) {
-    for (t_list* j = i->next; j != NULL; j = j->next) {
-      if (cmp_fn(i->content, j->content) > 0) {
-        void* tmp = i->content;
-        i->content = j->content;
-        j->content = tmp;
+  bool swapped = false;
+  t_list* ptr;
+  void *temp;
+  do {
+    swapped = false;
+    ptr = head;
+
+    while (ptr->next != NULL) {
+      if (cmp_fn(ptr->content, ptr->next->content) > 0) {
+        // Swap the content of the nodes
+        temp = ptr->content;
+        ptr->content = ptr->next->content;
+        ptr->next->content = temp;
+        swapped = true;
       }
-    }
-    // check if i->next has the same value as i
-    if (i->next != NULL && cmp_fn(i->content, i->next->content) == 0) {
-      // if so, we need to append i to the end of the node with the same value
-      t_list* last_node = i;
-      while (last_node != NULL && cmp_fn(i->content, last_node->content) == 0) {
-        last_node = last_node->next;
-      }
-      //we append i to last_node
-      i->next = last_node->next;
-      last_node->next = i;
+      ptr = ptr->next;
     }
   }
+  while (swapped);
+  // for (t_list* i = head; i != NULL; i = i->next) {
+  // for (t_list* j = i->next; j != NULL; j = j->next) {
+  // if (cmp_fn(i->content, j->content) >= 0) {
+  // void* tmp = i->content;
+  // i->content = j->content;
+  // j->content = tmp;
+  // }
+  // }
+  // }
 }

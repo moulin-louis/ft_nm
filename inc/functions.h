@@ -36,7 +36,6 @@ char		_64_print_SymType(const t_nm* file, Elf64_Sym* sym);
 int sym_strcmp(const void* ptr1, const void* ptr2);
 int sym_rev_strcmp(const void* ptr1, const void* ptr2);
 int sym_nocmp(const void* ptr1, const void* ptr2);
-
 //FILTER FN
 int base_filter(const void* ptr);
 int no_filter(const void* ptr);

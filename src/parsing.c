@@ -53,10 +53,15 @@ int is_flags(const char* args) {
   const size_t len = ft_strlen(args);
   if (
     ft_strncmp(args, "-a", len) == 0 ||
+    ft_strncmp(args, "--debug-syms", len) == 0 ||
     ft_strncmp(args, "-g", len) == 0 ||
+    ft_strncmp(args, "--extern-only", len) == 0 ||
     ft_strncmp(args, "-u", len) == 0 ||
+    ft_strncmp(args, "--undefined-only", len) == 0 ||
     ft_strncmp(args, "-r", len) == 0 ||
-    ft_strncmp(args, "-p", len) == 0
+    ft_strncmp(args, "--reverse-sort", len) == 0 ||
+    ft_strncmp(args, "-p", len) == 0 ||
+    ft_strncmp(args, "--no-sort", len) == 0
   ) {
     return 1;
   }
@@ -65,19 +70,19 @@ int is_flags(const char* args) {
 
 void process_flags(const char* args, t_flags* flags) {
   const size_t len = ft_strlen(args);
-  if (ft_strncmp(args, "-r", len) == 0) {
+  if (ft_strncmp(args, "-r", len) == 0 || ft_strncmp(args, "--reverse-sort", len) == 0) {
     flags->cmp_fn = sym_rev_strcmp;
   }
-  if (ft_strncmp(args, "-p", len) == 0) {
+  if (ft_strncmp(args, "-p", len) == 0 || ft_strncmp(args, "--no-sort", len) == 0) {
     flags->cmp_fn = NULL;
   }
-  if (ft_strncmp(args, "-a", len) == 0) {
+  if (ft_strncmp(args, "-a", len) == 0 || ft_strncmp(args, "--debug-syms", len) == 0) {
     flags->filter_fn = no_filter;
   }
-  if (ft_strncmp(args, "-g", len) == 0) {
+  if (ft_strncmp(args, "-g", len) == 0 || ft_strncmp(args, "--extern-only", len) == 0) {
     flags->filter_fn = local_filter;
   }
-  if (ft_strncmp(args, "-u", len) == 0) {
+  if (ft_strncmp(args, "-u", len) == 0 || ft_strncmp(args, "--undefined-only", len) == 0) {
     flags->filter_fn = defined_filter;
   }
 }
