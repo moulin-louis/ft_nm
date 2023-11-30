@@ -54,4 +54,4 @@ run_test "$(which fish)" 10
 run_test ./sample/hello-32 11
 run_test ./sample/hello-32 -r 12
 run_test ./sample/hello-32 -p 13
-#rm diff1 diff2
+rm diff1 diff2
