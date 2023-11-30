@@ -55,3 +55,6 @@ cmake-build-debug
 .idea
 build
 .vscode
+sample/test
+sample/test.o
+sample/hello-32
