@@ -23,9 +23,8 @@ uint32_t append_data_set(t_set* set, const void* data, const size_t len) {
 int32_t read_file(const char* path, uint8_t** result, size_t* len) {
   t_set set = {};
   const int file = open(path, O_RDONLY);
-  if (file == -1) {
+  if (file == -1)
     return 1;
-  }
   set.data = malloc(1024);
   if (set.data == NULL) {
     close(file);
@@ -67,9 +66,7 @@ inline char hex_char(int value) {
   if (value >= 0 && value < 10) {
     return '0' + value;
   }
-  else {
-    return 'a' + (value - 10);
-  }
+  return 'a' + (value - 10);
 }
 
 // Function to convert an unsigned long to a hexadecimal string with leading zeros
@@ -82,59 +79,53 @@ inline void ulong_to_hex_str(unsigned long value, char* str, int len) {
 }
 
 // Function to print an unsigned long in hexadecimal format
-void print_hex(unsigned long value, int fd) {
+void print_hex(unsigned long value, int fd, const bool arch) {
   char hex_string[17]; // 16 characters for the hexadecimal representation + 1 for null terminator
   ft_memset(hex_string, '0', 17);
-  ulong_to_hex_str(value, hex_string, 16);
+  if (arch)
+    ulong_to_hex_str(value, hex_string, 16);
+  else
+    ulong_to_hex_str(value, hex_string, 8);
   ft_putstr_fd(hex_string, fd);
 }
 
-// __attribute__((unused)) void hexdump(void* data, size_t len, int32_t row) {
-//   if (row == 0) {
-//     for (size_t i = 0; i < len; i++) {
-//       printf("%02x ", ((uint8_t *)data)[i]);
-//     }
-//     printf("\n");
-//     return;
-//   }
-//   for (size_t i = 0; i < len; i += row) {
-//     for (size_t j = i; j < i + row; j++) {
-//       if (j == len) {
-//         break;
-//       }
-//       printf("%02x ", ((uint8_t *)data)[j]);
-//     }
-//     printf("\n");
-//   }
-//   printf("\n");
-// }
+Elf64_Shdr* get_header_type_64(const t_nm* file, const uint64_t type) {
+  for (const t_list* tmp = file->lst_shdr_64; tmp != NULL; tmp = tmp->next) {
+    if (((Elf64_Shdr *)tmp->content)->sh_type == type)
+      return tmp->content;
+  }
+  return NULL;
+}
 
-// __attribute__((unused)) void asciidump(void* data, size_t len, uint32_t row) {
-//   if (row == 0) {
-//     for (size_t i = 0; i < len; i++) {
-//       if (((uint8_t *)data)[i] >= 0x20 && ((uint8_t *)data)[i] <= 0x7e) {
-//         fprintf(stdout, "%c", ((uint8_t *)data)[i]);
-//       }
-//       else {
-//         fprintf(stdout, ".");
-//       }
-//     }
-//     fprintf(stdout, "\n");
-//     return;
-//   }
-//   for (size_t i = 0; i < len; i += row) {
-//     for (size_t j = i; j < i + row; j++) {
-//       if (j == len) {
-//         break;
-//       }
-//       if (((uint8_t *)data)[j] >= 0x20 && ((uint8_t *)data)[j] <= 0x7e) {
-//         fprintf(stdout, "%c", ((uint8_t *)data)[j]);
-//       }
-//       else {
-//         fprintf(stdout, ".");
-//       }
-//     }
-//     fprintf(stdout, "\n");
-//   }
-//   fprintf(stdout, "\n");
-// }
+Elf64_Shdr* get_header_idx_64(const t_nm* file, const uint32_t shndx) {
+  uint32_t idx = 0;
+  for (const t_list* tmp = file->lst_shdr_64; tmp != NULL; tmp = tmp->next) {
+    if (idx == shndx)
+      return tmp->content;
+    idx += 1;
+  }
+  return NULL;
+}
+
+Elf32_Shdr* get_header_type_32(const t_nm* file, const uint64_t type) {
+  for (const t_list* tmp = file->lst_shdr_32; tmp != NULL; tmp = tmp->next) {
+    if (((Elf32_Shdr *)tmp->content)->sh_type == type)
+      return tmp->content;
+  }
+  return NULL;
+}
+
+Elf32_Shdr* get_header_idx_32(const t_nm* file, const uint32_t shndx) {
+  uint32_t idx = 0;
+  for (const t_list* tmp = file->lst_shdr_32; tmp != NULL; tmp = tmp->next) {
+    if (idx == shndx)
+      return tmp->content;
+    idx += 1;
+  }
+  return NULL;
+}
+
+void free_sym(void* sym) {
+  free(((t_sym *)sym)->name);
+  free(sym);
+}

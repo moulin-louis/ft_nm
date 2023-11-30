@@ -7,45 +7,47 @@
 
 #include <sys/mman.h>
 #include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <elf.h>
 #include <errno.h>
 #include <stdbool.h>
-#include <ctype.h>
-#include <signal.h>
 
 #include "libft.h"
 
-typedef struct shdr_64_s {
-  Elf64_Shdr* section_header;
-  struct shdr_64_s* next;
-} shdr_list_64_t;
+// typedef struct shdr_64_s {
+// Elf64_Shdr* section_header;
+// struct shdr_64_s* next;
+// } shdr_list_64_t;
+
+// typedef struct shdr_32_s {
+// Elf32_Shdr* section_header;
+// struct shdr_32_s* next;
+// } shdr_list_32_t;
 
 typedef struct {
-  uint8_t *path;
+  uint8_t* path;
   uint8_t* raw_data;
   size_t data_len;
   //64 bits
-  Elf64_Ehdr* elf64_header;
-  shdr_list_64_t *sections_list;
+  Elf64_Ehdr* hdr64;
+  t_list* lst_shdr_64;
   //32 bits
-  Elf32_Ehdr* elf32_header;
+  Elf32_Ehdr* hdr32;
+  t_list* lst_shdr_32;
 } t_nm;
 
 typedef struct {
-  char *name;
+  char* name;
   size_t len_name;
   size_t idx_start;
   char type;
   uint64_t value;
-  Elf64_Sym* sym;
+  void* sym;
+  bool arch; //1 == 64 bits, 0 == 32 bits
   bool dyn_located;
 } t_sym;
 
 typedef int (*CmpFn)(const void* node1, const void* node2);
+
 typedef int (*FilterFn)(const void* ptr);
 
 typedef struct {

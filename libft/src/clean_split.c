@@ -12,9 +12,8 @@
 
 #include "libft.h"
 
-void	clean_array(char **arr)
-{
-	int	i;
+void clean_array(char** arr) {
+	int i;
 
 	i = -1;
 	while (arr[++i])

@@ -12,13 +12,11 @@
 
 #include "../inc/libft.h"
 
-static	int	ft_is_set(char c, const char *set)
-{
-	int	i;
+static int ft_is_set(char c, const char* set) {
+	int i;
 
 	i = 0;
-	while (set[i])
-	{
+	while (set[i]) {
 		if (c == set[i])
 			return (1);
 		i++;
@@ -26,9 +24,8 @@ static	int	ft_is_set(char c, const char *set)
 	return (0);
 }
 
-static	char	*ft_fill_result(char *result, int j, int i, char *s1)
-{
-	int	x;
+static char* ft_fill_result(char* result, int j, int i, char* s1) {
+	int x;
 
 	x = -1;
 	while (++x <= (j - i))
@@ -37,18 +34,16 @@ static	char	*ft_fill_result(char *result, int j, int i, char *s1)
 	return (result);
 }
 
-char	*ft_strtrim(char const*s1, char const *set)
-{
-	int		i;
-	int		j;
-	char	*result;
+char* ft_strtrim(char const* s1, char const* set) {
+	int i;
+	int j;
+	char* result;
 
 	i = 0;
 	j = 0;
 	while (ft_is_set(((char *)s1)[i], (set)) && *s1)
 		i++;
-	if (!((char *)s1)[i])
-	{
+	if (!((char *)s1)[i]) {
 		result = malloc(1);
 		if (!result)
 			return (NULL);

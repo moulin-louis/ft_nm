@@ -12,19 +12,16 @@
 
 #include "../inc/libft.h"
 
-static	int	ft_nbr_str(char *s, char c)
-{
-	int	nbr_str;
-	int	i;
+static int ft_nbr_str(char* s, char c) {
+	int nbr_str;
+	int i;
 
 	nbr_str = 0;
 	i = 0;
-	while (s[i])
-	{
+	while (s[i]) {
 		if (s[i] == c)
 			i++;
-		else
-		{
+		else {
 			while (s[i] != c && s[i])
 				i++;
 			nbr_str++;
@@ -33,28 +30,24 @@ static	int	ft_nbr_str(char *s, char c)
 	return (nbr_str);
 }
 
-static	int	ft_str_len_char(char *s, int i, char c)
-{
-	int	a;
+static int ft_str_len_char(char* s, int i, char c) {
+	int a;
 
 	a = 0;
-	while (s[i] != c && s[i])
-	{
+	while (s[i] != c && s[i]) {
 		a++;
 		i++;
 	}
 	return (a);
 }
 
-static	int	ft_fill_string(char *dest, char *src, int index, char sep)
-{
-	int	i;
-	int	j;
+static int ft_fill_string(char* dest, char* src, int index, char sep) {
+	int i;
+	int j;
 
 	i = 0;
 	j = 0;
-	while (src[index] != sep && src[index])
-	{
+	while (src[index] != sep && src[index]) {
 		dest[j] = src[index];
 		j++;
 		i++;
@@ -64,22 +57,19 @@ static	int	ft_fill_string(char *dest, char *src, int index, char sep)
 	return (i);
 }
 
-static	void	ft_fil_result(char *s, char **result, char c)
-{
-	int	i;
-	int	x;
+static void ft_fil_result(char* s, char** result, char c) {
+	int i;
+	int x;
 
 	i = 0;
 	x = 0;
 	while (s[i] == c && s[i])
 		i++;
-	while (s[i])
-	{
-		if (s[i] != c)
-		{
+	while (s[i]) {
+		if (s[i] != c) {
 			result[x] = malloc(sizeof(char) * (ft_str_len_char(s, i, c) + 1));
 			if (!result[x])
-				return ;
+				return;
 			i = i + ft_fill_string(result[x], s, i, c);
 			x++;
 		}
@@ -93,10 +83,9 @@ static	void	ft_fil_result(char *s, char **result, char c)
 leak car je ne free pas les malloc precedent.
 A faire attention pour les prochains projets*/
 
-char	**ft_split(char const *s, char c)
-{
-	int		nbr_str;
-	char	**result;
+char** ft_split(char const* s, char c) {
+	int nbr_str;
+	char** result;
 
 	nbr_str = ft_nbr_str((char *)s, c);
 	result = malloc(sizeof(char *) * (nbr_str + 1));

@@ -12,17 +12,15 @@
 
 #include "../inc/libft.h"
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
-{
-	char	*temp1;
-	char	*temp2;
+int ft_memcmp(const void* s1, const void* s2, size_t n) {
+	char* temp1;
+	char* temp2;
 
 	temp1 = (char *)s1;
 	temp2 = (char *)s2;
 	if (n == 0)
 		return (0);
-	while (*temp1 == *temp2 && n != 1)
-	{
+	while (*temp1 == *temp2 && n != 1) {
 		temp1++;
 		temp2++;
 		n--;

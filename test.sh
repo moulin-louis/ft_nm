@@ -21,6 +21,7 @@ function check_test {
         echo -n "TEST $1: "
         echo -e "\033[31mKO\033[0m"
         run_diff
+        rm diff1 diff2
         exit 1
     fi
 }
@@ -36,14 +37,21 @@ function run_test {
   check_test $nbr_test
 }
 
+# Compile test
+cd ./sample && gcc -c test.c && gcc test.c -o test && cd ..
+cd ./sample && nasm -f elf32 hello-32.asm && ld -m elf_i386 hello-32.o -o hello-32 && rm -rf hello-32.o && cd ..
+
 run_test ./sample/test.o 1
 run_test ./sample/test 2
-run_test ./sample/test -r ./sample/test 3
-run_test ./sample/test -p ./sample/test 4
-run_test ./sample/test -a ./sample/test 5
-run_test ./sample/test -g ./sample/test 6
-run_test ./sample/test -u ./sample/test 7
-run_test ./sample/test.o ./sample/test 8
-run_test ./sample/test.o ./sample/test -r 9
-run_test $(which fish) 10
-rm diff1 diff2
+run_test ./sample/test -r 3
+run_test ./sample/test -p 4
+run_test ./sample/test -a 5
+run_test ./sample/test -g 6
+run_test ./sample/test -u 7
+run_test ./sample/test.o 8
+run_test ./sample/test.o -r 9
+run_test "$(which fish)" 10
+run_test ./sample/hello-32 11
+run_test ./sample/hello-32 -r 12
+run_test ./sample/hello-32 -p 13
+#rm diff1 diff2

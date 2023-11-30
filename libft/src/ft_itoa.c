@@ -12,15 +12,13 @@
 
 #include "../inc/libft.h"
 
-static	int	ft_size_nbr(long nbr)
-{
-	int	result_nbr;
+static int ft_size_nbr(long nbr) {
+	int result_nbr;
 
 	result_nbr = 0;
 	if (nbr == 0)
 		return (1);
-	while (nbr > 1)
-	{
+	while (nbr > 1) {
 		nbr /= 10;
 		result_nbr++;
 	}
@@ -29,57 +27,48 @@ static	int	ft_size_nbr(long nbr)
 	return (result_nbr);
 }
 
-static	void	ft_fill_result(char *result, int size_nbr, long nbr, int minus)
-{
-	if (minus == 1)
-	{
+static void ft_fill_result(char* result, int size_nbr, long nbr, int minus) {
+	if (minus == 1) {
 		result[0] = '-';
-		while (size_nbr != 0)
-		{
+		while (size_nbr != 0) {
 			result[size_nbr] = (nbr % 10) + '0';
 			nbr /= 10;
 			size_nbr--;
 		}
 	}
-	if (minus == 0)
-	{
+	if (minus == 0) {
 		size_nbr--;
-		while (size_nbr >= 0)
-		{
+		while (size_nbr >= 0) {
 			result[size_nbr] = (nbr % 10) + '0';
 			nbr /= 10;
-		size_nbr--;
+			size_nbr--;
 		}
 	}
 }
 
-static	void	ft_add_null_terminal_number(char *result, int size_nbr,
-		int minus)
-{
+static void ft_add_null_terminal_number(char* result, int size_nbr,
+                                        int minus) {
 	if (minus == 1)
 		result[size_nbr + 1] = '\0';
 	if (minus == 0)
 		result[size_nbr] = '\0';
 }
 
-static	char	*ft_nbr_0(char *result)
-{
+static char* ft_nbr_0(char* result) {
 	result[0] = '0';
 	result[1] = 0;
 	return (result);
 }
 
-char	*ft_itoa(int n)
-{
-	long	nbr;
-	int		size_nbr;
-	char	*result;
-	int		minus;
+char* ft_itoa(int n) {
+	long nbr;
+	int size_nbr;
+	char* result;
+	int minus;
 
 	nbr = n;
 	minus = 0;
-	if (nbr < 0)
-	{
+	if (nbr < 0) {
 		nbr = nbr * -1;
 		minus = 1;
 	}

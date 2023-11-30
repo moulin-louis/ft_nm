@@ -12,8 +12,7 @@
 
 #include "../inc/libft.h"
 
-static	int	ft_count_malloc(char *s, unsigned int start, size_t len)
-{
+static int ft_count_malloc(char* s, unsigned int start, size_t len) {
 	if (start > len || start > ft_strlen(s))
 		return (1);
 	if (len > (ft_strlen(s) - start))
@@ -23,12 +22,11 @@ static	int	ft_count_malloc(char *s, unsigned int start, size_t len)
 	return (0);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*result;
-	int		i;
-	int		j;
-	int		malloc_count;
+char* ft_substr(char const* s, unsigned int start, size_t len) {
+	char* result;
+	int i;
+	int j;
+	int malloc_count;
 
 	malloc_count = ft_count_malloc((char *)s, start, len);
 	result = malloc(sizeof(char) * malloc_count);
@@ -36,10 +34,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s[i])
-	{
-		if ((unsigned int) i >= start && j < (int)len)
-		{
+	while (s[i]) {
+		if ((unsigned int)i >= start && j < (int)len) {
 			result[j] = s[i];
 			j++;
 		}

@@ -12,20 +12,18 @@
 
 #include "../inc/libft.h"
 
-static	int	ft_is_wp(char c)
-{
+static int ft_is_wp(char c) {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r')
+	    || c == '\r')
 		return (1);
 	else
 		return (0);
 }
 
-int	ft_atoi(const char *nptr)
-{
-	int		i;
-	int		minus;
-	long	result;
+int ft_atoi(const char* nptr) {
+	int i;
+	int minus;
+	long result;
 
 	i = 0;
 	minus = 1;
@@ -36,8 +34,7 @@ int	ft_atoi(const char *nptr)
 		minus = -1;
 	if (nptr[i] == '-' || nptr[i] == '+')
 		i++;
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
+	while (nptr[i] >= '0' && nptr[i] <= '9') {
 		result = result * 10 + (nptr[i] - '0');
 		i++;
 	}

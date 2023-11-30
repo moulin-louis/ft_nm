@@ -12,22 +12,19 @@
 
 #include "../inc/libft.h"
 
-char	*ft_strrchr(const char *s, int c)
-{
-	int	x;
+char* ft_strrchr(const char* s, int c) {
+	int x;
 
 	x = 0;
 	if (c > 0)
 		c = (char)c;
-	while (*s)
-	{
+	while (*s) {
 		s++;
 		x++;
 	}
-	while (x >= 0)
-	{
+	while (x >= 0) {
 		if (*s == c)
-			return ((char *) s);
+			return ((char *)s);
 		s--;
 		x--;
 	}

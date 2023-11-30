@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(ft_nm C)
 
-# set(CMAKE_C_COMPILER "/usr/bin/clang")
-set(CMAKE_C_STANDARD 99)
-
 include_directories(./inc ./libft/inc)
 add_compile_options(-Wall -Werror -Wextra -O3 -mavx -msse2 -march=native -fno-builtin)
 

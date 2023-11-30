@@ -35,7 +35,9 @@ int local_filter(const void* ptr) {
     const t_sym* node = (t_sym *)ptr;
     if (base_filter(node))
         return 1;
-    if (ELF64_ST_BIND(node->sym->st_info) == STB_LOCAL)
+    if (node->arch && ELF64_ST_BIND(((Elf64_Sym*)node->sym)->st_info) == STB_LOCAL)
+        return 1;
+    if (!node->arch && ELF32_ST_BIND(((Elf32_Sym*)node->sym)->st_info) == STB_LOCAL)
         return 1;
     return 0;
 }
@@ -44,7 +46,9 @@ int defined_filter(const void* ptr) {
     const t_sym* node = (t_sym *)ptr;
     if (base_filter(node))
         return 1;
-    if (node->sym->st_shndx != SHN_UNDEF)
+    if (node->arch && ((Elf64_Sym *)node->sym)->st_shndx != SHN_UNDEF)
+        return 1;
+    if (!node->arch && ((Elf32_Sym *)node->sym)->st_shndx != SHN_UNDEF)
         return 1;
     return 0;
 }

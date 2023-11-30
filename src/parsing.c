@@ -4,48 +4,51 @@
 
 #include "ft_nm.h"
 
-int32_t sections_push_back_64(t_nm* file, Elf64_Shdr* segment) {
-  shdr_list_64_t* node = ft_calloc(sizeof(shdr_list_64_t), 1);
-  if (node == NULL)
-    return 1;
-  node->section_header = segment;
-  if (file->sections_list == NULL) {
-    file->sections_list = node;
-    return 0;
+int32_t parse_sections_64(t_nm* file) {
+  const uint64_t offset_section_table = file->hdr64->e_shoff;
+  uint8_t* sections_table = file->raw_data + offset_section_table;
+  for (uint32_t idx = 0; idx < file->hdr64->e_shnum * file->hdr64->e_shentsize; idx += file->hdr64->e_shentsize) {
+    t_list* node = ft_lstnew(sections_table + idx);
+    if (node == NULL)
+      return 1;
+    ft_lstadd_back(&file->lst_shdr_64, node);
   }
-  shdr_list_64_t* tmp = file->sections_list;
-  while (tmp->next) {
-    tmp = tmp->next;
-  }
-  tmp->next = node;
   return 0;
 }
 
-int32_t parse_sections_64(t_nm* file) {
-  const uint64_t offset_section_table = file->elf64_header->e_shoff;
+int32_t parse_sections_32(t_nm* file) {
+  const uint64_t offset_section_table = file->hdr32->e_shoff;
   uint8_t* sections_table = file->raw_data + offset_section_table;
-  for (uint32_t idx = 0; idx < file->elf64_header->e_shnum * file->elf64_header->e_shentsize;
-       idx += file->elf64_header->e_shentsize) {
-    if (sections_push_back_64(file, (Elf64_Shdr *)(sections_table + idx))) {
+  for (uint32_t idx = 0; idx < file->hdr32->e_shnum * file->hdr32->e_shentsize; idx += file->hdr32->e_shentsize) {
+    t_list* node = ft_lstnew(sections_table + idx);
+    if (node == NULL)
       return 1;
-    }
+    ft_lstadd_back(&file->lst_shdr_32, node);
   }
   return 0;
 }
 
 int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr) {
-  //check for the magic number
-  if (ft_memcmp(elf64Ehdr, "\x7F" "ELF", 4) != 0) {
+  if (ft_memcmp(elf64Ehdr, "\x7F" "ELF", 4) != 0)
     return 1;
-  }
-  //check for the elf version
-  if (elf64Ehdr->e_version != 1) {
+  if (elf64Ehdr->e_version != 1)
     return 1;
-  }
-  //check for the elf type
-  if (elf64Ehdr->e_type != ET_EXEC && elf64Ehdr->e_type != ET_DYN && elf64Ehdr->e_type != ET_REL) {
+  if (elf64Ehdr->e_ident[EI_CLASS] != ELFCLASS64)
     return 1;
-  }
+  if (elf64Ehdr->e_type != ET_EXEC && elf64Ehdr->e_type != ET_DYN && elf64Ehdr->e_type != ET_REL)
+    return 1;
+  return 0;
+}
+
+int32_t check_elf_header_32(const Elf32_Ehdr* elf32Ehdr) {
+  if (ft_memcmp(elf32Ehdr, "\x7F" "ELF", 4) != 0)
+    return 1;
+  if (elf32Ehdr->e_version != 1)
+    return 1;
+  if (elf32Ehdr->e_ident[EI_CLASS] != ELFCLASS32)
+    return 1;
+  if (elf32Ehdr->e_type != ET_EXEC && elf32Ehdr->e_type != ET_DYN && elf32Ehdr->e_type != ET_REL)
+    return 1;
   return 0;
 }
 
@@ -70,21 +73,16 @@ int is_flags(const char* args) {
 
 void process_flags(const char* args, t_flags* flags) {
   const size_t len = ft_strlen(args);
-  if (ft_strncmp(args, "-r", len) == 0 || ft_strncmp(args, "--reverse-sort", len) == 0) {
+  if (ft_strncmp(args, "-r", len) == 0 || ft_strncmp(args, "--reverse-sort", len) == 0)
     flags->cmp_fn = sym_rev_strcmp;
-  }
-  if (ft_strncmp(args, "-p", len) == 0 || ft_strncmp(args, "--no-sort", len) == 0) {
+  if (ft_strncmp(args, "-p", len) == 0 || ft_strncmp(args, "--no-sort", len) == 0)
     flags->cmp_fn = NULL;
-  }
-  if (ft_strncmp(args, "-a", len) == 0 || ft_strncmp(args, "--debug-syms", len) == 0) {
+  if (ft_strncmp(args, "-a", len) == 0 || ft_strncmp(args, "--debug-syms", len) == 0)
     flags->filter_fn = no_filter;
-  }
-  if (ft_strncmp(args, "-g", len) == 0 || ft_strncmp(args, "--extern-only", len) == 0) {
+  if (ft_strncmp(args, "-g", len) == 0 || ft_strncmp(args, "--extern-only", len) == 0)
     flags->filter_fn = local_filter;
-  }
-  if (ft_strncmp(args, "-u", len) == 0 || ft_strncmp(args, "--undefined-only", len) == 0) {
+  if (ft_strncmp(args, "-u", len) == 0 || ft_strncmp(args, "--undefined-only", len) == 0)
     flags->filter_fn = defined_filter;
-  }
 }
 
 int add_to_head(t_list** head, const char* args) {

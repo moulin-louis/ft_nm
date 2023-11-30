@@ -4,9 +4,9 @@
 
 #include "libft.h"
 
-void filter_lst(t_list **head, int (*filter)(const void*), void (*del)(void *)) {
-  t_list *current = *head;
-  t_list *prev = NULL;
+void filter_lst(t_list** head, int (*filter)(const void*), void (*del)(void*)) {
+  t_list* current = *head;
+  t_list* prev = NULL;
 
   while (current != NULL) {
     if (filter(current->content)) {
@@ -15,14 +15,16 @@ void filter_lst(t_list **head, int (*filter)(const void*), void (*del)(void *)) 
         del(current->content);
         free(current);
         current = *head;
-      } else {
-        t_list *temp = current;
+      }
+      else {
+        t_list* temp = current;
         prev->next = current->next;
         current = current->next;
         del(temp->content);
         free(temp);
       }
-    } else {
+    }
+    else {
       prev = current;
       current = current->next;
     }

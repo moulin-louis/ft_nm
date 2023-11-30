@@ -1,17 +1,11 @@
 //
 // Created by louis on 11/2/23.
 //
-#include <mm_malloc.h>
-#include <stdnoreturn.h>
 
 #include "ft_nm.h"
 
 inline int sym_nocmp(const void* ptr1 __attribute__((unused)), const void* ptr2 __attribute__((unused))) {
   return 0;
-}
-
-char do_nothing(char c) {
-  return c;
 }
 
 int sym_strcmp(const void* ptr1, const void* ptr2) {
