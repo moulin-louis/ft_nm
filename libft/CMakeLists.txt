@@ -49,5 +49,6 @@ add_library(ft STATIC ./src/ft_atoi.c
 ./src/ft_lstmap.c			
 ./src/ft_lstnew.c			
 ./src/ft_lstsize.c		
-./src/clean_split.c src/ft_lstfilter.c
+./src/clean_split.c
+src/ft_lstfilter.c
 src/ft_lstsort.c)

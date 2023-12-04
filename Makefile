@@ -1,0 +1,33 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: loumouli <loumouli@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/01/13 13:30:11 by loumouli          #+#    #+#              #
+#    Updated: 2023/02/15 11:49:33 by loumouli         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+all:
+	mkdir -p build
+	cd build && cmake .. && cd ..
+	cmake --build build
+
+clean:
+	rm -rf ./build/CMakeFiles
+	rm -rf ./build/libft
+	rm -rf ./build/cmake_install.cmake
+	rm -rf ./build/CMakeCache.txt
+	rm -rf ./build/Makefile
+	make -C ./libft clean
+
+fclean:
+	rm -rf build
+	make -C ./libft fclean
+
+re:			fclean all
+
+.PHONY: all clean fclean re 
+
+.NOTPARALLEL:fclean
