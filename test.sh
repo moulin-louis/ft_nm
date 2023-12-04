@@ -2,6 +2,8 @@
 
 ##define function to check if the test is ok or not
 
+build_foler=build
+
 function run_diff_null {
   diff diff1 diff2 > /dev/null
   return $?
@@ -31,12 +33,13 @@ function run_test {
   all_args=("$@")
   len_args=$#
   args=${all_args[@]:0:$len_args-1}
-  ./cmake-build-debug/ft_nm $args > diff1
+  $build_foler/ft_nm $args > diff1
   echo "----------------------------------"
   nm $args > diff2
   nbr_test=${all_args[$len_args-1]}
   check_test $nbr_test
 }
+
 
 # Compile test
 cd ./sample && gcc -c test.c && gcc test.c -o test && cd ..

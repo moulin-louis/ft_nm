@@ -20,11 +20,9 @@ clean:
 	rm -rf ./build/cmake_install.cmake
 	rm -rf ./build/CMakeCache.txt
 	rm -rf ./build/Makefile
-	make -C ./libft clean
 
 fclean:
 	rm -rf build
-	make -C ./libft fclean
 
 re:			fclean all
 
