@@ -10,18 +10,9 @@
 #include <elf.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "libft.h"
-
-// typedef struct shdr_64_s {
-// Elf64_Shdr* section_header;
-// struct shdr_64_s* next;
-// } shdr_list_64_t;
-
-// typedef struct shdr_32_s {
-// Elf32_Shdr* section_header;
-// struct shdr_32_s* next;
-// } shdr_list_32_t;
 
 typedef struct {
   uint8_t* path;
@@ -76,5 +67,7 @@ typedef struct {
 
 //prototype of all functions
 #include "functions.h"
+
+void print_lst_symbols(t_list* node);
 
 #endif //WOODY_WOODPACKER_WOODY_H

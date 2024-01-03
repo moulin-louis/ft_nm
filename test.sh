@@ -2,7 +2,7 @@
 
 ##define function to check if the test is ok or not
 
-build_foler=build
+build_foler=cmake-build-debug
 
 function run_diff_null {
   diff diff1 diff2 > /dev/null

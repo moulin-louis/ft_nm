@@ -129,3 +129,14 @@ void free_sym(void* sym) {
   free(((t_sym *)sym)->name);
   free(sym);
 }
+
+void print_lst_symbols(t_list* node) {
+  for (const t_list* tmp = node; tmp; tmp = tmp->next) {
+    // const Elf32_Sym* sym = tmp->content;
+    printf("One node\n");
+    //symbol string = sym_str_tab + sym->st_name
+
+    // printf("\n");
+  }
+  printf("\n");
+}

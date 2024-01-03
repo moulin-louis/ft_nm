@@ -22,16 +22,16 @@ char getSymType_64(const t_nm* file, const Elf64_Sym* sym) {
     return 'W';
   }
   switch (sym->st_shndx) {
-    case SHN_ABS:
-      return 'A';
-    case SHN_UNDEF:
-      return 'U';
+  case SHN_ABS:
+    return 'A';
+  case SHN_UNDEF:
+    return 'U';
   }
-  const Elf64_Shdr* shdr = (Elf64_Shdr *)(file->raw_data + file->hdr64->e_shoff + sym->st_shndx * file->
-                                          hdr64->e_shentsize);
-  const Elf64_Shdr* shstrtb = (Elf64_Shdr *)(file->raw_data + file->hdr64->e_shoff + file->hdr64->
-                                             e_shstrndx * file->hdr64->e_shentsize);
-  const char* section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
+  const Elf64_Shdr* shdr = (Elf64_Shdr*)(file->raw_data + file->hdr64->e_shoff + sym->st_shndx * file->
+    hdr64->e_shentsize);
+  const Elf64_Shdr* shstrtb = (Elf64_Shdr*)(file->raw_data + file->hdr64->e_shoff + file->hdr64->
+    e_shstrndx * file->hdr64->e_shentsize);
+  const char* section_name = (char*)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
   char result;
   const size_t len = ft_strlen(section_name);
   if (ft_strncmp(section_name, ".text", len) == 0)
@@ -66,6 +66,8 @@ char getSymType_64(const t_nm* file, const Elf64_Sym* sym) {
     result = 'D';
   else if (ft_strncmp(section_name, ".note.ABI-tag", len) == 0)
     result = 'R';
+  else if (ft_strncmp(section_name, ".jcr", len) == 0)
+    result = 'd';
   else
     result = '?';
   if (bind == STB_LOCAL)
@@ -91,16 +93,16 @@ char getSymType_32(const t_nm* file, const Elf32_Sym* sym) {
     return 'W';
   }
   switch (sym->st_shndx) {
-    case SHN_ABS:
-      return 'A';
-    case SHN_UNDEF:
-      return 'U';
+  case SHN_ABS:
+    return 'A';
+  case SHN_UNDEF:
+    return 'U';
   }
-  const Elf32_Shdr* shdr = (Elf32_Shdr *)(file->raw_data + file->hdr32->e_shoff + sym->st_shndx * file->
-                                          hdr32->e_shentsize);
-  const Elf32_Shdr* shstrtb = (Elf32_Shdr *)(file->raw_data + file->hdr32->e_shoff + file->hdr32->
-                                             e_shstrndx * file->hdr32->e_shentsize);
-  const char* section_name = (char *)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
+  const Elf32_Shdr* shdr = (Elf32_Shdr*)(file->raw_data + file->hdr32->e_shoff + sym->st_shndx * file->
+    hdr32->e_shentsize);
+  const Elf32_Shdr* shstrtb = (Elf32_Shdr*)(file->raw_data + file->hdr32->e_shoff + file->hdr32->
+    e_shstrndx * file->hdr32->e_shentsize);
+  const char* section_name = (char*)(file->raw_data + shstrtb->sh_offset + shdr->sh_name);
   char result;
   const size_t len = ft_strlen(section_name);
   if (ft_strncmp(section_name, ".text", len) == 0)
@@ -135,10 +137,11 @@ char getSymType_32(const t_nm* file, const Elf32_Sym* sym) {
     result = 'D';
   else if (ft_strncmp(section_name, ".note.ABI-tag", len) == 0)
     result = 'R';
+  else if (ft_strncmp(section_name, ".jcr", len) == 0)
+    return 'd';
   else
     result = '?';
   if (bind == STB_LOCAL)
     result = ft_tolower(result);
   return result;
 }
-

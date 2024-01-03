@@ -116,8 +116,12 @@ void display_symbols(const t_list* head) {
   for (const t_list* tmp = head; tmp != NULL; tmp = tmp->next) {
     if (((t_sym *)tmp->content)->type == 'U'
         || (((t_sym *)tmp->content)->value == 0x0 && ((t_sym *)tmp->content)->type != 'a' && ((t_sym *)tmp->content)->
-            type != 'T' && ((t_sym *)tmp->content)->type != 'b'))
-      ft_putstr_fd("                ", 1);
+            type != 'T' && ((t_sym *)tmp->content)->type != 'b')) {
+      if (arch)
+        ft_putstr_fd("                ", 1);
+      else
+        ft_putstr_fd("        ", 1);
+    }
     else {
       print_hex(((t_sym *)tmp->content)->value, 1, arch);
     }
