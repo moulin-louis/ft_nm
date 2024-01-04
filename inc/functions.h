@@ -17,6 +17,8 @@ int32_t parse_program_headers_64(t_nm* bin);
 
 int32_t parse_program_headers_32(t_nm* bin);
 
+void print_parsing_error(const t_nm* nm, int32_t code);
+
 int32_t parse_sections_64(t_nm* file);
 
 int32_t parse_sections_32(t_nm* file);
@@ -25,9 +27,9 @@ int32_t extract_symbols_64(const t_nm* file, const t_flags* flags, bool arch);
 
 int32_t extract_symbols_32(const t_nm* file, const t_flags* flags, bool arch);
 
-int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr);
+int32_t check_elf_header_64(const t_nm* file);
 
-int32_t check_elf_header_32(const Elf32_Ehdr* elf32Ehdr);
+int32_t check_elf_header_32(const t_nm* file);
 
 int parse_args(int ac, char** av, t_list** head, t_flags* flags);
 

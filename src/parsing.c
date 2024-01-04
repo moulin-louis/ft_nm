@@ -28,27 +28,59 @@ int32_t parse_sections_32(t_nm* file) {
   return 0;
 }
 
-int32_t check_elf_header_64(const Elf64_Ehdr* elf64Ehdr) {
-  if (ft_memcmp(elf64Ehdr, "\x7F" "ELF", 4) != 0)
+void print_parsing_error(const t_nm* nm, int32_t code) {
+  if (code == 1) {
+    print_error((const char*)nm->path, "file format not recognized");
+    return;
+  }
+  if (code == 2) {
+    print_error((const char*)nm->path, "wrong elf version");
+    return;
+  }
+  if (code == 3 || code == 5)
+    return;
+  print_error((const char*)nm->path, "file too short");
+  print_error((const char*)nm->path, "file format not recognized");
+
+}
+
+int32_t check_elf_header_64(const t_nm* file) {
+  if (ft_memcmp(file->hdr64, "\x7F" "ELF", 4) != 0)
     return 1;
-  if (elf64Ehdr->e_version != 1)
-    return 1;
-  if (elf64Ehdr->e_ident[EI_CLASS] != ELFCLASS64)
-    return 1;
-  if (elf64Ehdr->e_type != ET_EXEC && elf64Ehdr->e_type != ET_DYN && elf64Ehdr->e_type != ET_REL)
-    return 1;
+  if (file->hdr64->e_version != EV_CURRENT)
+    return 2;
+  if (file->hdr64->e_ident[EI_CLASS] != ELFCLASS64)
+    return 3;
+  if (file->hdr64->e_type != ET_EXEC && file->hdr64->e_type != ET_DYN && file->hdr64->e_type != ET_REL)
+    return 4;
+  if (file->hdr64->e_machine != EM_X86_64)
+    return 5;
+  if (file->hdr64->e_ehsize != sizeof(Elf64_Ehdr))
+    return 6;
+  if (file->hdr64->e_shentsize != sizeof(Elf64_Shdr))
+    return 7;
+  if (file->data_len < file->hdr64->e_shoff + file->hdr64->e_shnum * file->hdr64->e_shentsize)
+    return 8;
+  if (file->data_len < file->hdr64->e_phoff + file->hdr64->e_phnum * file->hdr64->e_phentsize)
+    return 9;
   return 0;
 }
 
-int32_t check_elf_header_32(const Elf32_Ehdr* elf32Ehdr) {
-  if (ft_memcmp(elf32Ehdr, "\x7F" "ELF", 4) != 0)
+int32_t check_elf_header_32(const t_nm* file) {
+  if (ft_memcmp(file->hdr32, "\x7F" "ELF", 4) != 0)
     return 1;
-  if (elf32Ehdr->e_version != 1)
-    return 1;
-  if (elf32Ehdr->e_ident[EI_CLASS] != ELFCLASS32)
-    return 1;
-  if (elf32Ehdr->e_type != ET_EXEC && elf32Ehdr->e_type != ET_DYN && elf32Ehdr->e_type != ET_REL)
-    return 1;
+  if (file->hdr32->e_version != EV_CURRENT)
+    return 2;
+  if (file->hdr32->e_ident[EI_CLASS] != ELFCLASS32)
+    return 3;
+  if (file->hdr32->e_type != ET_EXEC && file->hdr32->e_type != ET_DYN && file->hdr32->e_type != ET_REL)
+    return 4;
+  if (file->hdr32->e_machine != EM_386)
+    return 5;
+  if (file->hdr32->e_ehsize != sizeof(Elf32_Ehdr))
+    return 6;
+  if (file->hdr32->e_shentsize != sizeof(Elf32_Shdr))
+    return 7;
   return 0;
 }
 

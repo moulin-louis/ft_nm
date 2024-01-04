@@ -56,7 +56,7 @@ int32_t read_file(const char* path, uint8_t** result, size_t* len) {
 int32_t print_error(const char* filename, const char* error) {
   ft_putstr_fd("ft_nm: ", 2);
   ft_putstr_fd(filename, 2);
-  ft_putstr_fd(" ", 2);
+  ft_putstr_fd(": ", 2);
   ft_putstr_fd(error, 2);
   ft_putstr_fd("\n", 2);
   return 1;

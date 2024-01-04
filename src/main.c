@@ -2,38 +2,45 @@
 
 #include "ft_nm.h"
 
-//check health elf header from file
+static int32_t check_64(t_nm* file, const t_flags* flags) {
+  file->hdr64 = (Elf64_Ehdr*)file->raw_data;
+  const int32_t retval = check_elf_header_64(file);
+  if (retval) {
+    print_parsing_error(file, retval);
+    return retval;
+  }
+  parse_sections_64(file);
+  extract_symbols_64(file, flags, true);
+  return 0;
+}
 
+static int32_t check_32(t_nm* file, const t_flags* flags) {
+  file->hdr32 = (Elf32_Ehdr*)file->raw_data;
+  const int32_t retval = check_elf_header_32(file);
+  if (retval) {
+    print_parsing_error(file, retval);
+    if (retval == 3 || retval == 5)
+      print_error((const char *)file->path, "file format not recognized");
+    return retval;
+  }
+  parse_sections_32(file);
+  extract_symbols_32(file, flags, false);
+  return 0;
+}
+
+//check health elf header from file
 int32_t process_file(const char* path, const t_flags* flags) {
   t_nm file = {};
-  file.path = (uint8_t *)ft_strdup(path);
-  if (file.path == NULL)
-    return 1;
-  if (read_file(path, &file.raw_data, &file.data_len)) {
-    free(file.path);
+
+  memset(&file, 0, sizeof(file));
+  file.path = (uint8_t*)path;
+  if (read_file(path, &file.raw_data, &file.data_len))
     return print_error(path, strerror(errno));
-  }
-  if (file.data_len < sizeof(Elf64_Ehdr) && file.data_len < sizeof(Elf32_Ehdr)) {
-    free(file.path);
-    return print_error(path, "file format not recognized");
-  }
-  file.hdr64 = (Elf64_Ehdr *)file.raw_data;
-  file.hdr32 = (Elf32_Ehdr *)file.raw_data;
-  if (check_elf_header_64(file.hdr64) == 0) {
-    parse_sections_64(&file);
-    extract_symbols_64(&file, flags, true);
-    free(file.raw_data);
-    ft_lstclear(&file.lst_shdr_64, NULL);
-  }
-  else if (check_elf_header_32(file.hdr32) == 0) {
-    parse_sections_32(&file);
-    extract_symbols_32(&file, flags, false);
-    free(file.raw_data);
-    ft_lstclear(&file.lst_shdr_32, NULL);
-  }
-  else
-    print_error(path, "file format not recognized");
-  free(file.path);
+  if (check_64(&file, flags) == 0)
+    goto end;
+  check_32(&file, flags);
+end:
+  free(file.raw_data);
   return 0;
 }
 
@@ -42,9 +49,8 @@ int main(const int ac, char** av) {
   t_flags flags = {};
   flags.cmp_fn = sym_strcmp;
   flags.filter_fn = base_filter;
-  if (parse_args(ac, av, &file, &flags)) {
+  if (parse_args(ac, av, &file, &flags))
     return 1;
-  }
   if (file == NULL)
     return process_file("./a.out", &flags);
   bool format = false;
