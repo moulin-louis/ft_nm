@@ -20,11 +20,24 @@ static int32_t check_32(t_nm* file, const t_flags* flags) {
   if (retval) {
     print_parsing_error(file, retval);
     if (retval == 3 || retval == 5)
-      print_error((const char *)file->path, "file format not recognized");
+      print_error((const char*)file->path, "file format not recognized");
     return retval;
   }
   parse_sections_32(file);
   extract_symbols_32(file, flags, false);
+  return 0;
+}
+
+int32_t check_arch(t_nm* file) {
+  if (file->data_len < sizeof(Elf64_Ehdr)) {
+    return 0;
+  }
+  if (ft_memcmp(file->raw_data, "\x7F" "ELF", 4) == 0) {
+    if (file->raw_data[EI_CLASS] == ELFCLASS64)
+      return 1;
+    if (file->raw_data[EI_CLASS] == ELFCLASS32)
+      return 2;
+  }
   return 0;
 }
 
@@ -36,12 +49,15 @@ int32_t process_file(const char* path, const t_flags* flags) {
   file.path = (uint8_t*)path;
   if (read_file(path, &file.raw_data, &file.data_len))
     return print_error(path, strerror(errno));
-  if (check_64(&file, flags) == 0)
-    goto end;
-  check_32(&file, flags);
-end:
+  int retval = check_arch(&file);
+  if (retval == 1)
+    retval = check_64(&file, flags);
+  else if (retval == 2)
+    retval = check_32(&file, flags);
+  else
+    print_error(path, "file format not recognized");
   free(file.raw_data);
-  return 0;
+  return retval;
 }
 
 int main(const int ac, char** av) {
