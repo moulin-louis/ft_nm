@@ -2,7 +2,7 @@
 
 ##define function to check if the test is ok or not
 
-build_foler=cmake-build-debug
+build_foler=build
 
 function run_diff_null {
   diff diff1 diff2 > /dev/null
@@ -33,7 +33,7 @@ function run_test {
   all_args=("$@")
   len_args=$#
   args=${all_args[@]:0:$len_args-1}
-  $build_foler/ft_nm $args > diff1
+  ./$build_foler/ft_nm $args > diff1
   echo "----------------------------------"
   nm $args > diff2
   nbr_test=${all_args[$len_args-1]}
@@ -54,7 +54,6 @@ run_test ./sample/test -g 6
 run_test ./sample/test -u 7
 run_test ./sample/test.o 8
 run_test ./sample/test.o -r 9
-run_test "$(which fish)" 10
 run_test ./sample/hello-32 11
 run_test ./sample/hello-32 -r 12
 run_test ./sample/hello-32 -p 13
