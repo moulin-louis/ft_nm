@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "ft_nm.h"
 
 static int32_t check_64(t_nm* file, const t_flags* flags) {

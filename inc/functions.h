@@ -6,8 +6,6 @@
 #define WOODY_WOODPACKER_FUNCTIONS_H
 
 //I/O FUNCTION
-int32_t read_file(const char* path, uint8_t** result, uint64_t* len);
-
 int32_t save_new_file(const t_nm* ptr);
 
 void print_hex(unsigned long value, int fd, const bool arch);
@@ -46,6 +44,8 @@ Elf32_Shdr* get_header_idx_32(const t_nm* file, const uint32_t shndx);
 Elf64_Shdr* get_header_type_64(const t_nm* file, const uint64_t type);
 
 Elf32_Shdr* get_header_type_32(const t_nm* file, const uint64_t type);
+
+void print_lst_symbols(t_list* node);
 
 //COMPARE FN
 int sym_strcmp(const void* ptr1, const void* ptr2);

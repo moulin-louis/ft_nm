@@ -5,6 +5,8 @@
 #ifndef WOODY_WOODPACKER_WOODY_H
 #define WOODY_WOODPACKER_WOODY_H
 
+#include "libft.h"
+
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <elf.h>
@@ -12,8 +14,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "libft.h"
 
 typedef struct {
   uint8_t* path;
@@ -47,13 +47,6 @@ typedef struct {
   FilterFn filter_fn;
 } t_flags;
 
-typedef struct {
-  uint8_t* data;
-  size_t len;
-  size_t capacity;
-} t_set;
-
-
 #define ALIGN_DOWN(x, align) ((x) & ~(align - 1))
 #define ALIGN_UP(x, align) ALIGN_DOWN((x) + (align) - 1, (align)) ? ALIGN_DOWN((x) + (align) - 1, (align)) : (align)
 
@@ -68,7 +61,5 @@ typedef struct {
 
 //prototype of all functions
 #include "functions.h"
-
-void print_lst_symbols(t_list* node);
 
 #endif //WOODY_WOODPACKER_WOODY_H
