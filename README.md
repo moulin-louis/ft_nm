@@ -6,4 +6,4 @@
 - Handle x86_32, x64, objects file and .so files
 - Handle options -a (all symbols), -g (extern symbols), -u (undefined symbols), -r (reverse sort), -p (no sort)
 ## Note:
-- TBD
+- 125/100
